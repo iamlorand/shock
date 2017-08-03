@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <dots>
+        <variable option="global">
+        </variable>
+        <variable option="admin">
+            <pageTitle>
+                <action>
+                    <list>Article List</list>
+                </action>
+            </pageTitle>
+        </variable>
+        <variable option="frontend">
+            <pageTitle>
+                <action>
+                    <list>Article List</list>
+                </action>
+            </pageTitle>
+        </variable>
+        <variable option="mobile">
+            <validate>
+                <details>
+                    <lengthMin>3</lengthMin>
+                </details>
+            </validate> 
+            <contactForm>
+                <subject>Mobile Contact Form</subject>
+                <message>
+From: %EMAIL%
+Phone: %PHONE%
+
+%MESSAGE%
+
+---
+Date: %DATE%
+IP: %IP%
+User Agent: %USERAGENT%
+                </message>
+                <mailSent>Your message was sent!</mailSent>
+            </contactForm>
+        </variable>         
+    </dots>
+</config>
