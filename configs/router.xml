@@ -5,11 +5,10 @@
 	<controllers>
 		<frontend>Page</frontend>
 		<frontend>User</frontend>
-		<frontend>Article</frontend>
+		<frontend>Sound</frontend>
 		<admin>Admin</admin>
 		<admin>System</admin>
 		<admin>User</admin>
-		<admin>Article</admin>
 		<rss>Sample</rss>
 		<mobile>Page</mobile>
 	</controllers>

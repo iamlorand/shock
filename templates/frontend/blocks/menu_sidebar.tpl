@@ -6,11 +6,11 @@
 	<li class="{SEL_PAGE_CODING-STANDARD}">
 		<a href="{SITE_URL}/page/coding-standard/">Coding Standard</a> 
 	</li>
-	<li class="{SEL_PAGE_ABOUT}">
-		<a href="{SITE_URL}/page/about/">About</a> 
+	<li class="{SEL_PAGE_UPLOAD}">
+		<a href="{SITE_URL}/sound/upload/">Upload</a> 
 	</li> 
 	<li class="{SEL_PAGE_ABOUT}">
-		<a href="{SITE_URL}/article/">Articles</a> 
+		<a href="{SITE_URL}/page/about/">About</a> 
 	</li> 
 	<li class="{SEL_PAGE_WHO-WE-ARE}">
 		<a href="{SITE_URL}/page/who-we-are/">Who we are</a> 

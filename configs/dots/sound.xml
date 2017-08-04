@@ -4,20 +4,20 @@
         <variable option="global">
         </variable>
         <variable option="admin">
-            <pageTitle>
-                <action>
-                    <list>Article List</list>
-                </action>
-            </pageTitle>
         </variable>
         <variable option="frontend">
             <pageTitle>
                 <action>
-                    <list>Article List</list>
+                    <upload>Upload</upload>
                 </action>
             </pageTitle>
         </variable>
         <variable option="mobile">
+            <pageTitle>
+                <action>
+                    <home>Mobile Version</home>
+                </action>
+            </pageTitle>
             <validate>
                 <details>
                     <lengthMin>3</lengthMin>
