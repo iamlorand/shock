@@ -87,28 +87,6 @@
 				</subItem>
 			</subItems>
 		</item>
-		<item>
-			<title>Articles</title>
-			<link>article/list/</link>
-			<description>List all articles</description>
-			<subItems>
-				<subItem>
-					<title>Delete</title>
-					<link>article/delete/</link>
-					<description>Deletes an article</description>
-				</subItem>
-				<subItem>
-					<title>List</title>
-					<link>article/list/</link>
-					<description>Lists all article</description>
-				</subItem>
-				<subItem>
-					<title>Add</title>
-					<link>article/add/</link>
-					<description>Add an article</description>
-				</subItem>
-			</subItems>
-		</item>
 	</menu>
 </config>
 </menus>
