@@ -4,8 +4,7 @@ $soundView = new Sound_View($tpl);
 $soundModel = new Sound();
 
 $pageTitle = $option->pageTitle->action->{$registry->requestAction};
-
-
+$session = Zend_Registry::get('session');
 
 switch ($registry->requestAction)
 {
@@ -14,12 +13,19 @@ switch ($registry->requestAction)
         $upload = $soundView->upload('upload');
         if ($_SERVER['REQUEST_METHOD'] == 'POST')
         {
-            $target_dir = "uploads/music/";
-            $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-            move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file);
+            $music_dir = "uploads/music/";
+            $thumbnail_dir = "uploads/thumbnails/";
+            $music_file = $music_dir . basename($_FILES["fileToUpload"]["name"]);
+            $thumbnail_file = $thumbnail_dir . basename($_FILES["thumbnail"]["name"]);
+
+            $insertArray = [];
+            $insertArray['filename'] = $music_file;
+            $insertArray['userId'] = $session->user->id;
+            $insertArray['thumbnail'] = $thumbnail_file;
+            $insertArray = array_merge($insertArray, $_POST);
+            move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $music_file);
+            move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $thumbnail_file);
+            $soundModel->insertUpload($insertArray);
         }
         break;
 }
-
-
-

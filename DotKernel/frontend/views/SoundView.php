@@ -6,7 +6,7 @@ class Sound_View extends View
     {
         $this->tpl = $tpl;
     }
-
+    #use this function to upload a file
     public function upload($template = '')
     {
         if (!empty($template))
