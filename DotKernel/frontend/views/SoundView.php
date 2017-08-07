@@ -8,7 +8,7 @@ class Sound_View extends View
         $this->settings = Zend_Registry::get('settings');
         $this->session = Zend_Registry::get('session');
     }
-
+    #use this function to upload a file
     public function upload($template = '')
     {
         if (!empty($template))

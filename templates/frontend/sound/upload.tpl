@@ -19,5 +19,5 @@
     <br>
     <input type="file" name="thumbnail" id="thumbnail">
     <br>
-    <input type="submit" value="Upload File" name="submit">
+    <input type="submit" value="Upload File">
 </form>
