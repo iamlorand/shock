@@ -6,14 +6,15 @@ class Sound extends Dot_Model
     {
         parent::__construct();
     }
-    public function getMusicList($page=1) {
+    public function getMusicList($page=1)
+    {
 	    $select=$this->db->select()
 	                     ->from('sound');
 	    $dotPaginator=new Dot_Paginator($select, $page, $this->settings->resultsPerPage);
     
         $result=$dotPaginator->getData();
         return $result;
-
+    }
     #inserts a new upload into table sound
     public function insertUpload($valueArray)
     {

@@ -6,6 +6,9 @@
 	<li class="{SEL_PAGE_CODING-STANDARD}">
 		<a href="{SITE_URL}/page/coding-standard/">Coding Standard</a> 
 	</li>
+	<li class="{SEL_PAGE_LIST}">
+		<a href="{SITE_URL}/sound/list/">List all songs</a> 
+	</li>
 	<li class="{SEL_PAGE_UPLOAD}">
 		<a href="{SITE_URL}/sound/upload/">Upload</a> 
 	</li> 
