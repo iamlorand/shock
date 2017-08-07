@@ -9,6 +9,7 @@
             <pageTitle>
                 <action>
                     <upload>Upload</upload>
+                    <list>List all songs</list>
                 </action>
             </pageTitle>
         </variable>
