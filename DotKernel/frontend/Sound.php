@@ -6,4 +6,14 @@ class Sound extends Dot_Model
     {
         parent::__construct();
     }
+
+
+    public function getMusicList($page=1) {
+	    $select=$this->db->select()
+	                     ->from('sound');
+	    $dotPaginator=new Dot_Paginator($select, $page, $this->settings->resultsPerPage);
+    
+        $result=$dotPaginator->getData();
+        return $result;
+    }
 }
