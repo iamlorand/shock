@@ -28,4 +28,11 @@ switch ($registry->requestAction)
             $soundModel->insertUpload($insertArray);
         }
         break;
+     case 'list':
+        $page=(isset($registry->request['page']) && $registry->request['page'] > 0 ) ? $registry->request['page'] : 1;
+        $list=$soundModel->getMusicList($page);
+        //var_dump($list);exit;
+        $soundView->showMusic('show_list',$list,$page);
+        
+    break;
 }
