@@ -12,6 +12,7 @@
 				<guest>
 					<Page>all</Page><!-- allow 'guest' to access 'Page' controller -->
 					<User>all</User><!-- allow 'guest' to access 'User' controller -->
+					<Sound>list</Sound><!-- allow 'user' to access 'User' controller and also 'list' action-->
 				</guest> 				
 				<user>
 					<User>account</User><!-- allow 'user' to access 'User' controller and also 'account' action-->

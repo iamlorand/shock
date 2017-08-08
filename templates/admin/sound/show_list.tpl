@@ -17,7 +17,7 @@
             <tr>
                 <td style="text-align: center;">{ID}</td>
                 <td style="width: 50px;"><img src="{SITE_URL}/{THUMBNAIL}" style="width: 25px; height: 25px"></td>
-                <td><a href="{SITE_URL}/sound/list/id/{ID}/">{TITLE}</a></td>
+                <td><a href="{SITE_URL}/admin/sound/show/id/{ID}/">{TITLE}</a></td>
                 <td>{FILENAME}</td>
                 <td>
                     <audio controls>

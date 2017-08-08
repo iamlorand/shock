@@ -64,4 +64,26 @@ class Sound_View extends View
             }
         }
     }
+
+    #displays the details of a song
+    public function showSong($template = '', $music, $commentList)
+    {
+        if ($template != '')
+        {
+            $this->template=$template;
+            $this->tpl->setFile('tpl_main','sound/'.$this->template.'.tpl');
+            $this->tpl->setBlock('tpl_main', 'song_comment_list', 'song_comment_list_block');
+            foreach ($music as $details) {
+                foreach ($details as $key => $value) {
+                $this->tpl->setVar('SONG_'.strtoupper($key),$value); 
+                }
+            }
+            foreach ($commentList as $comment) {
+                foreach ($comment as $key => $value) {
+                    $this->tpl->setVar('SONG_COMMENT_'.strtoupper($key), $value);
+                }
+                $this->tpl->parse('song_comment_list_block', 'song_comment_list', TRUE);
+            }
+        }
+    }
 }
