@@ -75,4 +75,23 @@ switch ($registry->requestAction)
             exit;
         }
         break;
+
+    case 'show':
+        $id = $registry->request['id'];
+        $song = $soundModel->getSongById($id);
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (array_key_exists('id', $_POST)) {
+                $comment = [
+                        'message' => strip_tags($_POST['text']),
+                        'id' => $_POST['id']
+                        ];
+                $soundModel->editCommentById($comment, $_POST['id']);
+            } elseif (array_key_exists('delete', $_POST)) {
+                $soundModel->deleteCommentById($_POST['delete']);
+            }
+        }
+        $comments = $soundModel->getCommentById($id);
+        $soundView->showSong('show_song', $song, $comments);
+        break;
 }

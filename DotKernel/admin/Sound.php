@@ -39,4 +39,29 @@ class Sound extends Dot_Model
         $result = $this->db->fetchAll($select);
         return $result;
     }
+    #gets all comments by id from table comment
+    public function getCommentById($id)
+    {
+        $select = $this->db->select()
+                            ->from('comment')
+                            ->where('soundId=?', $id)
+                            ->joinLeft('user', 'comment.userId = user.id', ['username' => 'username']);
+        $result = $this->db->fetchAll($select);
+        return $result;
+    }
+    #adds a single comment into the table comment
+    public function addCommentById($a)
+    {
+        $insert = $this->db->insert('comment', $a);
+    }
+    #updates a comment into the table comment
+    public function editCommentById($a, $commentId)
+    {
+        $update = $this->db->update('comment', $a, 'id = ' . $commentId);
+    }
+    #deletes comment by id
+    public function deleteCommentById($id)
+    {
+        $delete = $this->db->delete('comment', 'id = ' . $id);
+    }
 }

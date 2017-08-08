@@ -8,6 +8,7 @@
                 <action>
                     <upload>Upload</upload>
                     <list>List all songs</list>
+                    <show>Show song details</show>
                 </action>
             </pageTitle>
             <infoMessage>
@@ -22,6 +23,7 @@
                 <action>
                     <upload>Upload</upload>
                     <list>List all songs</list>
+                    <show>Show song details</show>
                 </action>
             </pageTitle>
         </variable>
