@@ -4,6 +4,18 @@
         <variable option="global">
         </variable>
         <variable option="admin">
+            <pageTitle>
+                <action>
+                    <upload>Upload</upload>
+                    <list>List all songs</list>
+                </action>
+            </pageTitle>
+            <infoMessage>
+                <songAdd>Song added ! </songAdd>
+                <songUpdate>Song updated ! </songUpdate>
+                <songDelete>Song was deleted ! </songDelete>
+                <noSongDelete>No song was deleted ! </noSongDelete>
+            </infoMessage>
         </variable>
         <variable option="frontend">
             <pageTitle>

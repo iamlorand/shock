@@ -87,6 +87,23 @@
 				</subItem>
 			</subItems>
 		</item>
+		<item>
+			<title>Music</title>
+			<link>/sound/</link>
+			<description>Music details</description>
+			<subItems>
+				<subItem>
+					<title>List</title>
+					<link>sound/list/</link>
+					<description>List all songs</description>
+				</subItem>
+				<subItem>
+					<title>Add new</title>
+					<link>sound/upload/</link>
+					<description>Upload a new song</description>
+				</subItem>
+			</subItems>
+		</item>
 	</menu>
 </config>
 </menus>

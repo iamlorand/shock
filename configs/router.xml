@@ -9,6 +9,7 @@
 		<admin>Admin</admin>
 		<admin>System</admin>
 		<admin>User</admin>
+		<admin>Sound</admin>
 		<rss>Sample</rss>
 		<mobile>Page</mobile>
 	</controllers>
