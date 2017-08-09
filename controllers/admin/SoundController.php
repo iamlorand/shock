@@ -91,7 +91,7 @@ switch ($registry->requestAction)
                 $soundModel->deleteCommentById($_POST['delete']);
             }
         }
-        $comments = $soundModel->getCommentById($id);
+        $comments = $soundModel->getReplysAndCommentsById($id);
         $soundView->showSong('show_song', $song, $comments);
         break;
 }

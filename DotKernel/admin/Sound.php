@@ -45,9 +45,40 @@ class Sound extends Dot_Model
         $select = $this->db->select()
                             ->from('comment')
                             ->where('soundId=?', $id)
+                            ->where('parentId=?', 0)
                             ->joinLeft('user', 'comment.userId = user.id', ['username' => 'username']);
         $result = $this->db->fetchAll($select);
         return $result;
+    }
+    #gets all replys by id from table comment
+    public function getReplyById($id)
+    {
+        $select = $this->db->select()
+                            ->from('comment')
+                            ->where('parentId=?', $id)
+                            ->joinLeft('user', 'comment.userId = user.id', ['username' => 'username']);
+        $result = $this->db->fetchAll($select);
+        return $result;
+    }
+    #gets all replys by id from table comment
+    public function getReplysAndCommentsById($id)
+    {
+        $comepletedData = [];
+        $parentsComments= $this->getCommentById($id);
+        foreach ($parentsComments as $key => $value) {
+            $replies = $this->getReplyById($value['id']);
+            $comepletedData[$value['id']]['message'] = $value['message'];
+            $comepletedData[$value['id']]['userId'] = $value['userId'];
+            $comepletedData[$value['id']]['username'] = $value['username'];
+            $comepletedData[$value['id']]['date'] = $value['date'];
+            $comepletedData[$value['id']]['parentId'] = $value['parentId'];
+            $comepletedData[$value['id']]['id'] = $value['id'];
+            if(isset($replies) && !empty($replies))
+            {
+                $comepletedData[$value['id']]['replies'] = $replies;
+            }
+        }
+        return $comepletedData;
     }
     #adds a single comment into the table comment
     public function addCommentById($a)

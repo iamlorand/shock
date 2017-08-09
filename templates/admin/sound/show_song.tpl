@@ -53,8 +53,26 @@
         </form>
         <button id="{SONG_COMMENT_ID}" class="edit" style="float: right;">Edit</button>
     </li>
+
+    <!-- BEGIN song_reply_list -->
+
+    <li class="clearfix" style="margin-left: 5px;">
+        <b>⇒{SONG_REPLY_USERNAME}:</b>
+        <span class="content">{SONG_REPLY_MESSAGE}</span>
+
+        <br>
+        <em style="font-size: 10px;">&nbsp; posted · {SONG_REPLY_DATE}</em>
+        <form method="POST" action="" style="float: right;">
+            <button name="delete" value="{SONG_REPLY_ID}">&#10007;</button>
+        </form>
+        <button id="{SONG_REPLY_ID}" class="edit" style="float: right;">&#9998;</button>
+    </li>
+    <!-- END song_reply_list -->
+    
     <hr>
 <!-- END song_comment_list -->
+
+
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
