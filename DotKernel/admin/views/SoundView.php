@@ -73,16 +73,29 @@ class Sound_View extends View
             $this->template=$template;
             $this->tpl->setFile('tpl_main','sound/'.$this->template.'.tpl');
             $this->tpl->setBlock('tpl_main', 'song_comment_list', 'song_comment_list_block');
+            $this->tpl->setBlock('song_comment_list', 'song_reply_list', 'song_reply_list_block');
+            
             foreach ($music as $details) {
                 foreach ($details as $key => $value) {
                 $this->tpl->setVar('SONG_'.strtoupper($key),$value); 
                 }
             }
+
             foreach ($commentList as $comment) {
-                foreach ($comment as $key => $value) {
-                    $this->tpl->setVar('SONG_COMMENT_'.strtoupper($key), $value);
-                }
+                foreach ($comment as $replyKey => $replyValue) {
+                    if ($replyKey != 'replies') {
+                        $this->tpl->setVar('SONG_COMMENT_'.strtoupper($replyKey), $replyValue);
+                    } else {
+                        foreach ($replyValue as $reply) {
+                            foreach ($reply as $key => $value) {
+                                $this->tpl->setVar('SONG_REPLY_'.strtoupper($key), $value);
+                            }
+                            $this->tpl->parse('song_reply_list_block', 'song_reply_list', TRUE);
+                        }
+                    }
+                }  
                 $this->tpl->parse('song_comment_list_block', 'song_comment_list', TRUE);
+                $this->tpl->parse('song_reply_list_block', '');
             }
         }
     }
