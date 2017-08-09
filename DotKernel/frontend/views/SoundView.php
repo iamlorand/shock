@@ -38,4 +38,15 @@ class Sound_View extends View
 
        } 
     }
+     
+    public function showMusicById($template='',$data)
+    {
+        if ($template!='') $this->template=$template;
+            
+        $this->tpl->setFile('tpl_main','sound/'.$this->template.'.tpl');
+        foreach ($data as $key=>$music) {
+            $this->tpl->setVar(strtoupper($key),$music);
+          
+        }
+    }
 }

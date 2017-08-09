@@ -20,4 +20,13 @@ class Sound extends Dot_Model
     {
         $insert = $this->db->insert('sound', $valueArray);
     }
+    public function getMusicById($id)
+    { 
+       $select=$this->db->select()
+                ->from('sound')
+                ->where('id =?',$id);
+        $result=$this->db->fetchRow($select);
+    
+    return $result;
+    }
 }

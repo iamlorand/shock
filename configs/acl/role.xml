@@ -16,8 +16,9 @@
 				</guest> 				
 				<user>
 					<User>account</User><!-- allow 'user' to access 'User' controller and also 'account' action-->
-					<Sound>upload</Sound><!-- allow 'user' to access 'User' controller and also 'upload' action-->
-					<Sound>show</Sound><!-- allow 'user' to access 'User' controller and also 'show' action-->
+					<Sound>list</Sound><!-- allow 'user' to access 'User' controller and also 'account' action-->
+					<Sound>upload</Sound><!-- allow 'user' to access 'User' controller and also 'account' action-->
+					<Sound>show_music</Sound><!-- allow 'user' to access 'User' controller and also 'account' action-->
 				</user> 
 			</allow>
 			<deny>
