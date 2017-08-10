@@ -18,7 +18,9 @@
 					<User>account</User><!-- allow 'user' to access 'User' controller and also 'account' action-->
 					<Sound>list</Sound><!-- allow 'user' to access 'User' controller and also 'account' action-->
 					<Sound>upload</Sound><!-- allow 'user' to access 'User' controller and also 'account' action-->
-					<Sound>show_music</Sound><!-- allow 'user' to access 'User' controller and also 'account' action-->
+					<Sound>show_song</Sound><!-- allow 'user' to access 'User' controller and also 'account' action-->
+					<Sound>update</Sound><!-- allow 'user' to access 'User' controller and also 'account' action-->
+					<Sound>delete</Sound><!-- allow 'user' to access 'User' controller and also 'account' action-->
 				</user> 
 			</allow>
 			<deny>

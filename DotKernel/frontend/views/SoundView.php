@@ -38,15 +38,75 @@ class Sound_View extends View
 
        } 
     }
-     
-    public function showMusicById($template='',$data)
+
+    #with this function you can edit an record(song) by id
+    public function showSongEdit($template = '', $music)
     {
-        if ($template!='') $this->template=$template;
-            
-        $this->tpl->setFile('tpl_main','sound/'.$this->template.'.tpl');
-        foreach ($data as $key=>$music) {
-            $this->tpl->setVar(strtoupper($key),$music);
-          
+        if (!empty($template))
+        {
+            $this->template = $template;
+            $this->tpl->setFile('tpl_main', 'sound/' . $this->template . '.tpl');
+            foreach ($music as $musicContent) {
+                foreach ($musicContent as $key => $value) {
+                    $this->tpl->setVar('SONG_'.strtoupper($key), $value);
+                }
+            }
         }
     }
+
+    #confirm deleting a record(song) by id
+    public function showDeleteConfirmation($template = '', $music)
+    {
+        if (!empty($template))
+        {
+            $this->template = $template;
+            $this->tpl->setFile('tpl_main', 'sound/' . $this->template . '.tpl');
+            foreach ($music as $musicContent) {
+                foreach ($musicContent as $key => $value) {
+                    $this->tpl->setVar('SONG_'.strtoupper($key), $value);
+                }
+            }
+        }
+    }
+     
+    #displays the details of a song
+    public function showSongById($template = '', $music, $commentList)
+    {
+        if ($template != '')
+        {
+            $this->template=$template;
+            $this->tpl->setFile('tpl_main','sound/'.$this->template.'.tpl');
+            $this->tpl->setBlock('tpl_main', 'song_comment_list', 'song_comment_list_block');
+            $this->tpl->setBlock('song_comment_list', 'song_reply_list', 'song_reply_list_block');
+            
+            foreach ($music as $details) {
+                foreach ($details as $key => $value) {
+                $this->tpl->setVar('SONG_'.strtoupper($key),$value); 
+                }
+            }
+
+            foreach ($commentList as $comment) {
+                foreach ($comment as $replyKey => $replyValue) {
+                    if ($replyKey != 'replies') {
+                        $this->tpl->setVar('SONG_COMMENT_'.strtoupper($replyKey), $replyValue);
+                    } else {
+                        foreach ($replyValue as $reply) {
+                            foreach ($reply as $key => $value) {
+                                $this->tpl->setVar('SONG_REPLY_'.strtoupper($key), $value);
+                            }
+                            $this->tpl->parse('song_reply_list_block', 'song_reply_list', TRUE);
+                        }
+                    }
+                }  
+                $this->tpl->parse('song_comment_list_block', 'song_comment_list', TRUE);
+                $this->tpl->parse('song_reply_list_block', '');
+            }
+        }
+    }
+
+
+
+
+
+
 }

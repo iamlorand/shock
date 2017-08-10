@@ -34,9 +34,62 @@ switch ($registry->requestAction)
         $soundView->showMusic('show_list',$list,$page);
         
     break;
-    case 'show_music':
-         $musicData=$soundModel->getMusicById($registry->request['id']);
-         $soundView->showMusicById('show_musicdescription',$musicData);
+    case 'show_song':
+        $id = $registry->request['id'];
+        $song = $soundModel->getSongById($id);
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (array_key_exists('id', $_POST)) {
+
+                $comment = [
+                        'message' => strip_tags($_POST['text']),
+                        'id' => $_POST['id']
+                        ];
+                $soundModel->editCommentById($comment, $_POST['id']);
+            } elseif (array_key_exists('delete', $_POST)) {
+                $soundModel->deleteCommentById($_POST['delete']);
+
+            }
+        }
+        $comments = $soundModel->getReplysAndCommentsById($id);
+        $soundView->showSongById('show_songdescription', $song, $comments);
+       
     break;
+    case 'delete':
+        if ((isset($registry->request['id'])) && (($registry->request['id']) > 0)) {
+            $id = $registry->request['id'];
+            $song = $soundModel->getSongById($id);
+            $soundView->showDeleteConfirmation('delete_song', $song);
+             if ($_SERVER['REQUEST_METHOD'] == 'POST')
+            {
+                if ('on' == $_POST['confirm'])
+                {
+                    $soundModel->deleteSong($id);
+                    $registry->session->message['txt'] = $option->infoMessage->songDelete;
+                    $registry->session->message['type'] = 'info';
+                }
+                else
+                {
+                    $registry->session->message['txt'] = $option->infoMessage->noSongDelete;
+                    $registry->session->message['type'] = 'info';
+                }
+                header('Location:'.$registry->configuration->website->params->url .'/' . $registry->requestController .'/list/');
+                exit;
+            }
+        }
+        break;
+
+    case 'update':
+        $id = $registry->request['id'];
+        $song = $soundModel->getSongById($id);
+        $soundView->showSongEdit('edit_song', $song);
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $soundModel->updateSong($_POST, $id);
+            $registry->session->message['txt'] = $option->infoMessage->songUpdate;
+            $registry->session->message['type'] = 'info';
+            header('Location:' . $registry->configuration->website->params->url . '/'. $registry->requestController . '/list/');
+            exit;
+        }
+        break;
    
 }
