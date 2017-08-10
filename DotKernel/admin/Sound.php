@@ -93,6 +93,7 @@ class Sound extends Dot_Model
     #deletes comment by id
     public function deleteCommentById($id)
     {
-        $delete = $this->db->delete('comment', 'id = ' . $id);
+        $deleteComment = $this->db->delete('comment', 'id = ' . $id);
+        $deleteReply = $this->db->delete('comment', 'parentId = ' . $id);
     }
 }
