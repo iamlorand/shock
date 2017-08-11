@@ -97,4 +97,24 @@ class Sound extends Dot_Model
         $deleteComment = $this->db->delete('comment', 'id = ' . $id);
         $deleteReply = $this->db->delete('comment', 'parentId = ' . $id);
     }
+    #inserts a rating into the table rating
+    public function insertRating($data)
+    {
+        $update = $this->db->insert('rating', $data);
+    }
+    #updates a rating into the table rating
+    public function updateRating($data, $id)
+    {
+        $update = $this->db->update('rating', $data, 'id = ' . $id);
+    }
+    #check a rating into the table rating
+    public function checkRating($soundId, $userId)
+    {
+        $select = $this->db->select()
+                            ->from('rating')
+                            ->where('soundId=?', $soundId)
+                            ->where('userId=?', $userId);
+        $result = $this->db->fetchRow($select);
+        return $result;
+    }
 }

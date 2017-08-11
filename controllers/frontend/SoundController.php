@@ -1,10 +1,11 @@
 <?php
 
+$session = Zend_Registry::get('session');
+
 $soundView = new Sound_View($tpl);
 $soundModel = new Sound();
 
 $pageTitle = $option->pageTitle->action->{$registry->requestAction};
-$session = Zend_Registry::get('session');
 
 switch ($registry->requestAction)
 {
@@ -28,15 +29,17 @@ switch ($registry->requestAction)
             $soundModel->insertUpload($insertArray);
         }
         break;
+
      case 'list':
         $page=(isset($registry->request['page']) && $registry->request['page'] > 0 ) ? $registry->request['page'] : 1;
         $list=$soundModel->getMusicList($page);
         $soundView->showMusic('show_list',$list,$page);
-        
-    break;
+        break;
+
     case 'show_song':
         $id = $registry->request['id'];
         $song = $soundModel->getSongById($id);
+        $checkRating = $soundModel->checkRating($id, $session->user->id);
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (array_key_exists('id', $_POST)) {
@@ -48,13 +51,28 @@ switch ($registry->requestAction)
                 $soundModel->editCommentById($comment, $_POST['id']);
             } elseif (array_key_exists('delete', $_POST)) {
                 $soundModel->deleteCommentById($_POST['delete']);
-
-            }
+            } else {
+                if (array_key_exists('parentId', $_POST)) {
+                    $comment = [
+                                    'userId' => $session->user->id,
+                                    'message' => strip_tags($_POST['text']),
+                                    'soundId' => $id,
+                                    'parentId' => $_POST['parentId']
+                                ];
+                } else {
+                    $comment = [
+                                    'userId' => $session->user->id,
+                                    'message' => strip_tags($_POST['text']),
+                                    'soundId' => $id
+                                ];
+                }
+                $soundModel->addCommentById($comment);
+            } 
         }
         $comments = $soundModel->getReplysAndCommentsById($id);
-        $soundView->showSongById('show_songdescription', $song, $comments);
-       
-    break;
+        $soundView->showSongById('show_songdescription', $song, $comments, $checkRating);
+        break;
+
     case 'delete':
         if ((isset($registry->request['id'])) && (($registry->request['id']) > 0)) {
             $id = $registry->request['id'];
@@ -91,5 +109,28 @@ switch ($registry->requestAction)
             exit;
         }
         break;
-   
+
+    case 'test':
+        if (($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['status']))) {                
+            if (($_POST['status'] == 'Like') || ($_POST['status'] == 'Liked')){
+                $result = [
+                    "success" => "true",
+                    "status" => $_POST['status']
+                    ];
+                $queryArray = [];
+                $queryArray['soundId'] = $_POST['soundId'];
+                $queryArray['userId'] = $session->user->id;
+                $queryArray['rating'] = ($_POST['status'] == 'Like') ? 1 : 0;
+
+                $checkRating = $soundModel->checkRating($_POST['soundId'], $session->user->id);
+                if (empty($checkRating)) {
+                    $soundModel->insertRating($queryArray);
+                } else {
+                    $soundModel->updateRating($queryArray, $checkRating['id']);
+                }
+                echo Zend_Json::encode($result);
+                exit();
+            }
+        }
+        break;
 }
