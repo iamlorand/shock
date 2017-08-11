@@ -28,14 +28,8 @@ class Sound_View extends View
             foreach ($music as $key => $value) {
                
              $this->tpl->setVar(strtoupper($key),$value); 
-                
-            
-            
              }
         $this->tpl->parse('list_music_block','list_music',true);
-       
-            
-
        } 
     }
 
@@ -70,7 +64,7 @@ class Sound_View extends View
     }
      
     #displays the details of a song
-    public function showSongById($template = '', $music, $commentList)
+    public function showSongById($template = '', $music, $commentList, $rating)
     {
         if ($template != '')
         {
@@ -78,7 +72,17 @@ class Sound_View extends View
             $this->tpl->setFile('tpl_main','sound/'.$this->template.'.tpl');
             $this->tpl->setBlock('tpl_main', 'song_comment_list', 'song_comment_list_block');
             $this->tpl->setBlock('song_comment_list', 'song_reply_list', 'song_reply_list_block');
-            
+
+            if($rating['rating'] == 1) {
+                $this->tpl->setVar('SONG_RATING', 'Liked'); 
+                $this->tpl->setVar('SONG_RATING_ICON', 'glyphicon glyphicon-heart'); 
+
+            } else {
+                $this->tpl->setVar('SONG_RATING', 'Like');
+                $this->tpl->setVar('SONG_RATING_ICON', 'glyphicon glyphicon-heart-empty');
+
+            }
+
             foreach ($music as $details) {
                 foreach ($details as $key => $value) {
                 $this->tpl->setVar('SONG_'.strtoupper($key),$value); 
@@ -103,10 +107,4 @@ class Sound_View extends View
             }
         }
     }
-
-
-
-
-
-
 }
