@@ -39,38 +39,44 @@ switch ($registry->requestAction)
     case 'show_song':
         $id = $registry->request['id'];
         $song = $soundModel->getSongById($id);
-        $checkRating = $soundModel->checkRating($id, $session->user->id);
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if (array_key_exists('id', $_POST)) {
+        if(!isset($session->user->id)) {
+            $comments = $soundModel->getReplysAndCommentsById($id);
+            $soundView->showSongById('show_songdescription', $song, $comments);
+        } else {
+            $checkRating = $soundModel->checkRating($id, $session->user->id);
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                if (array_key_exists('id', $_POST)) {
 
-                $comment = [
-                        'message' => strip_tags($_POST['text']),
-                        'id' => $_POST['id']
-                        ];
-                $soundModel->editCommentById($comment, $_POST['id']);
-            } elseif (array_key_exists('delete', $_POST)) {
-                $soundModel->deleteCommentById($_POST['delete']);
-            } else {
-                if (array_key_exists('parentId', $_POST)) {
                     $comment = [
-                                    'userId' => $session->user->id,
-                                    'message' => strip_tags($_POST['text']),
-                                    'soundId' => $id,
-                                    'parentId' => $_POST['parentId']
-                                ];
+                            'message' => strip_tags($_POST['text']),
+                            'id' => $_POST['id']
+                            ];
+                    $soundModel->editCommentById($comment, $_POST['id']);
+                } elseif (array_key_exists('delete', $_POST)) {
+                    $soundModel->deleteCommentById($_POST['delete']);
                 } else {
-                    $comment = [
-                                    'userId' => $session->user->id,
-                                    'message' => strip_tags($_POST['text']),
-                                    'soundId' => $id
-                                ];
-                }
-                $soundModel->addCommentById($comment);
-            } 
+                    if (array_key_exists('parentId', $_POST)) {
+                        $comment = [
+                                        'userId' => $session->user->id,
+                                        'message' => strip_tags($_POST['text']),
+                                        'soundId' => $id,
+                                        'parentId' => $_POST['parentId']
+                                    ];
+                    } else {
+                        $comment = [
+                                        'userId' => $session->user->id,
+                                        'message' => strip_tags($_POST['text']),
+                                        'soundId' => $id
+                                    ];
+                    }
+                    $soundModel->addCommentById($comment);
+                } 
+            }
+            $comments = $soundModel->getReplysAndCommentsById($id);
+            $soundView->showSongById('show_songdescription', $song, $comments, $checkRating);
         }
-        $comments = $soundModel->getReplysAndCommentsById($id);
-        $soundView->showSongById('show_songdescription', $song, $comments, $checkRating);
+
         break;
 
     case 'delete':
@@ -110,17 +116,17 @@ switch ($registry->requestAction)
         }
         break;
 
-    case 'test':
+    case 'rating':
         if (($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['status']))) {                
-            if (($_POST['status'] == 'Like') || ($_POST['status'] == 'Liked')){
+            if (($_POST['status'] == 0) || ($_POST['status'] == 1)){
                 $result = [
                     "success" => "true",
-                    "status" => $_POST['status']
+                    "status" => -1 * $_POST['status'] + 1
                     ];
                 $queryArray = [];
                 $queryArray['soundId'] = $_POST['soundId'];
                 $queryArray['userId'] = $session->user->id;
-                $queryArray['rating'] = ($_POST['status'] == 'Like') ? 1 : 0;
+                $queryArray['rating'] = ($_POST['status'] == '0') ? 1 : 0;
 
                 $checkRating = $soundModel->checkRating($_POST['soundId'], $session->user->id);
                 if (empty($checkRating)) {

@@ -2,10 +2,10 @@
 <config>
 	<dots>
 		<variable option="global">
-			<defaultPageTitle>DotKernel</defaultPageTitle>
+			<defaultPageTitle>KernelWave</defaultPageTitle>
 			<defaultMetaDescription>Enterprise Level PHP Solutions, based on DotKernel and Zend Framework, build by DotBoost Technologies Inc.</defaultMetaDescription>
 			<defaultMetaKeywords>DotKernel, PHP, Zend Framework, </defaultMetaKeywords>
-			<siteName>DotKernel</siteName>
+			<siteName>KernelWave</siteName>
 		</variable>
 		<variable option="admin">
 		</variable>

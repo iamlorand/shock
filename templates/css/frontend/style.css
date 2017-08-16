@@ -64,35 +64,28 @@ a:hover { color: #D7134F; }
 body, html { height:100%; }
 body { background-color: #FFF; }
 header { height: 120px; width:100%; background-color: #EEF2F5; }
-#header-content, #footer-content, #body { width: 1000px; margin:0 auto; }
+#header-content, #footer-content, #body { width: 65%; margin:0 auto; }
 #body { padding-top:60px; padding-bottom:30px; }
 #wrapper { width: 100%; background-color: white; min-height: 100%; height: auto !important; height: 100%; margin: 0 auto -100px; }
 #push, footer { height:100px; }
 footer { background-color:#EEF2F5; width:100%; }
 
 /****** Logo *********/
-#logo { font-size:26px; margin-top: 45px; float:left; }
+#logo { float:left; }
 #logo a { color:#41403B !important; text-decoration:none; }
+#logo img { height: 100px; width: 100px; margin-right: 15px; }
 
 /****** Top Menu *********/
 ul.menu_top { float:right; margin-top:55px; }
 ul.menu_top li { padding: 0px 0px 0 40px; float: left; list-style: none; background-repeat: no-repeat; background-position: 12px 2px; }
 ul.menu_top li:first-child { background-image:none; padding-left:none; }
-ul.menu_top li a { color: #464A53; font-size:15px; text-transform: uppercase; text-decoration:none; text-shadow: white 1px 1px 3px; }
+ul.menu_top li a { color: #449d44; font-size:15px; text-transform: uppercase; text-decoration:none; text-shadow: white 1px 1px 3px; }
 ul.menu_top li.selected a { color:#000; font-weight:bold; }
 .menu_button { display: none; float: right; margin-top: 30px; padding: 10px;  width: 30px; background-color: #444444; text-align: center; cursor: pointer; }
 .menu_button span { display: block; margin: 0px auto; height: 2px; width: 27px; background-color: #FFFFFF;  border: 2px solid #444444; }
 
-/***** Sidebar ******/
-nav#sidebar { width:260px; float:left; }
-nav#sidebar h3 { color: #3F4C76; font-size:16px; }
-nav#sidebar ul.menu_sidebar { padding: 15px 0 15px 15px; }
-nav#sidebar ul.menu_sidebar li { list-style-image: url('images/sidebar_menu_arrow.png'); }
-nav#sidebar ul.menu_sidebar li a { text-decoration:none; color: #464A53; font-size:14px; border-bottom: 1px solid #E1ECF2; display:block; padding-bottom: 10px; padding-top: 10px; }
-nav#sidebar ul.menu_sidebar li.selected a { font-weight:bold; font-size:14.5px; }
-
 /****** Content ****/
-div#content { width: 700px; float: right; }
+div#content { width: 100%; float: right; }
 div#content p { padding: 10px 10px 25px 0px; }
 h1, h2 { color: #404D79; }
 h1 { font-size: 24px; margin-bottom: 20px; }

@@ -1,4 +1,4 @@
-<div id="adminList" class="box-shadow">
+<div id="userList" class="box-shadow">
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -14,7 +14,7 @@
         <!-- BEGIN list_music -->
             <tr>
                 <td style="text-align: center;">{ID}</td>
-                <td style="width: 50px;"><img src="{SITE_URL}/{THUMBNAIL}" style="width: 25px; height: 25px"></td>
+                <td style="width: 50px;"><img src="{SITE_URL}/{THUMBNAIL}" style="width: 100px; height: auto;"></td>
                 <td><a href="{SITE_URL}/sound/show_song/id/{ID}">{TITLE}</a></td>
                 <td>
                     <audio controls>

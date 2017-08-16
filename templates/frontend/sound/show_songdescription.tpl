@@ -4,6 +4,12 @@
         padding: 5px;
         margin: 2px;
     }
+    .songDescription{
+        margin: auto;
+    }
+    .songDescription td{
+        padding: 10px;
+    }
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
@@ -19,22 +25,21 @@ $(document).ready(function(){
     var siteurl = "{SITE_URL}";
 
     function likeUnlike(elem){
-        var status = $(elem).text();
-        var id = $(elem).attr('id');
+        var status = $(elem).val();
         var soundId = "{SONG_ID}";
         $.ajax({
-            url : siteurl+"/sound/test",
+            url : siteurl+"/sound/rating",
             type : "POST",
             dataType: "Json",
             data : {status: status, soundId: soundId},
             success : function(response){
                 var status = response['status'];
-                if (status == "Liked") {
-                    $('#'+id).text('Like');
-                    $('#'+id).removeClass('glyphicon glyphicon-heart').addClass('glyphicon glyphicon-heart-empty');
+                if (status == "0") {
+                    $('#rating').val('0');
+                    $('#rating').removeClass('glyphicon glyphicon-heart').addClass('glyphicon glyphicon-heart-empty');
                 } else {
-                    $('#'+id).text('Liked');
-                    $('#'+id).removeClass('glyphicon glyphicon-heart-empty').addClass('glyphicon glyphicon-heart');
+                    $('#rating').val('1');
+                    $('#rating').removeClass('glyphicon glyphicon-heart-empty').addClass('glyphicon glyphicon-heart');
                 }
             }
         });
@@ -48,28 +53,39 @@ function reply(id)
 }
 
 </script>
-<div>
-    <ul class="form">
-        <li class="clearfix">
-            <label>Album Thumbnail:</label>
-            <img src="{SITE_URL}/{SONG_THUMBNAIL}" style="width: 200px; height: auto;">
-        </li>
-        <li class="clearfix">
-            <label>Title:</label>
-            <span>{SONG_TITLE}</span>
-        </li>
-        <li class="clearfix">
-            <label>Description</label>
-            <span>{SONG_DESCRIPTION}</span>
-        </li>
-        <li class="clearfix">
-            <label>Tags</label>
-            <span>{SONG_TAGS}</span>
-        </li>       
-    </ul>
-</div>
 
-<button class="{SONG_RATING_ICON}" id="test" onclick="likeUnlike(this)">{SONG_RATING}</button>
+<div class="panel panel-success" style="width: 45%; float: left;">
+    <div class="panel-heading">
+        <h3 style="text-align: center;">SONG DESCRIPTION</h3>
+        
+    </div>
+    <div class="panel-body">
+        <table class="songDescription">
+            <tbody>
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        <button class="{SONG_RATING_ICON}" id="rating" value="{SONG_RATING}" onclick="likeUnlike(this)" style="width: 50px; height: auto;"></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2"><img src="{SITE_URL}/{SONG_THUMBNAIL}" style="width: 200px; height: auto;"></td>
+                </tr>
+                <tr>
+                    <td>TITLE</td>
+                    <td>{SONG_TITLE}</td>
+                </tr>
+                <tr>
+                    <td>DESCRIPTION</td>
+                    <td>{SONG_DESCRIPTION}</td>
+                </tr>
+                <tr>
+                    <td>TAGS</td>
+                    <td>{SONG_TAGS}</td>
+                </tr>
+            </tbody>
+        </table>      
+    </div>
+</div>
 
 <div class="box-shadow" style="width: 50%; float: right;">
     <br>
