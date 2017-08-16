@@ -123,11 +123,6 @@ class View extends Dot_Template
 			$this->parse('top_menu_logged_block', '');		
 		}
 		$this->parse('MENU_TOP', 'tpl_menu_top');
-		
-		// sidebar menu
-		$this->setFile('tpl_menu_sidebar', 'blocks/menu_sidebar.tpl');
-		$this->setBlock('tpl_menu_sidebar', 'sidebar_menu_logged', 'sidebar_menu_logged_block');
-		$this->setBlock('tpl_menu_sidebar', 'sidebar_menu_not_logged', 'sidebar_menu_not_logged_block');
 
 		// add selected to the correct menu item
 		$this->setVar($selectedItem, 'selected');

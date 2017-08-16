@@ -23,17 +23,14 @@
 		<header>
 			<div id="header-content" class="clearfix">
 				<div id="logo">
-					<h1><a href="{SITE_URL}/">{SITE_NAME}</a></h1>
+					<h1><a href="{SITE_URL}/"><img src="{SITE_URL}/uploads/icons/kernelwave.png">SoundKernel</a></h1>
 				</div>
 				{MENU_TOP}
 			</div>
 		</header>
 		<div id="body">
-			<nav id="sidebar">
-				{MENU_SIDEBAR}
-			</nav>
 			<div id="content">
-				<h1>{PAGE_CONTENT_TITLE}</h1>
+				<!-- <h1>{PAGE_CONTENT_TITLE}</h1> -->
 				{MESSAGE_BLOCK}
 				{MAIN_CONTENT}
 			</div>

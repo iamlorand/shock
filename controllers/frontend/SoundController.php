@@ -110,17 +110,17 @@ switch ($registry->requestAction)
         }
         break;
 
-    case 'test':
+    case 'rating':
         if (($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['status']))) {                
-            if (($_POST['status'] == 'Like') || ($_POST['status'] == 'Liked')){
+            if (($_POST['status'] == 0) || ($_POST['status'] == 1)){
                 $result = [
                     "success" => "true",
-                    "status" => $_POST['status']
+                    "status" => -1 * $_POST['status'] + 1
                     ];
                 $queryArray = [];
                 $queryArray['soundId'] = $_POST['soundId'];
                 $queryArray['userId'] = $session->user->id;
-                $queryArray['rating'] = ($_POST['status'] == 'Like') ? 1 : 0;
+                $queryArray['rating'] = ($_POST['status'] == '0') ? 1 : 0;
 
                 $checkRating = $soundModel->checkRating($_POST['soundId'], $session->user->id);
                 if (empty($checkRating)) {
