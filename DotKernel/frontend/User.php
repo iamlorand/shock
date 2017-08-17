@@ -111,7 +111,7 @@ class User extends Dot_Model_User
 	 * @param array $validData
 	 * @return void
 	 */
-	public function authorizeLogin($validData)
+	public function authorizeLogin($validData, $returnURL = '')
 	{
 		$session = Zend_Registry::get('session');
 		unset($session->user);
@@ -131,7 +131,15 @@ class User extends Dot_Model_User
 								'country' => $userCountry[1]
 								);
 			$this->registerLogin($dataLogin);
-			$link = isset($session->wantUrl) ? $session->wantUrl : $this->config->website->params->url.'/user/account';
+			if($returnURL != '')
+			{
+				$link = $returnURL;
+			}
+			else
+			{
+				$link = isset($session->wantUrl) ? $session->wantUrl : $this->config->website->params->url.'/user/account';
+			}
+			
 			header('location: '.$link);
 			exit;
 		}

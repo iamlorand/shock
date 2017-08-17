@@ -48,7 +48,7 @@ switch ($registry->requestAction)
 			$dotValidateUser = new Dot_Validate_User(array('who' => 'user', 'action' => 'login', 'values' => $values));
 			if($dotValidateUser->isValid())
 			{
-				$userModel->authorizeLogin($dotValidateUser->getData());
+				$userModel->authorizeLogin($dotValidateUser->getData(), $_SESSION['redirectURL']);
 			}
 			else
 			{

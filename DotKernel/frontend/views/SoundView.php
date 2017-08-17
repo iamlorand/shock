@@ -64,7 +64,7 @@ class Sound_View extends View
     }
      
     #displays the details of a song
-    public function showSongById($template = '', $music, $commentList, $rating = '')
+    public function showSongById($template = '', $music, $commentList, $rating = '', $ratingCount = '')
     {
         if ($template != '')
         {
@@ -72,7 +72,22 @@ class Sound_View extends View
             $this->tpl->setFile('tpl_main','sound/'.$this->template.'.tpl');
             $this->tpl->setBlock('tpl_main', 'song_comment_list', 'song_comment_list_block');
             $this->tpl->setBlock('song_comment_list', 'song_reply_list', 'song_reply_list_block');
-            
+            $this->tpl->setBlock('song_comment_list', 'song_comment_list_button_logged', 'song_comment_list_button_logged_block');
+            $this->tpl->setBlock('song_reply_list', 'song_reply_list_button_logged', 'song_reply_list_button_logged_block');
+            //redirects and autocompletes comment after login
+            if(isset($_SESSION['message']) && !isset($_SESSION['parentId']))
+            {
+                $this->tpl->setVar('SONG_COMMENT_POST', $_SESSION['message']);
+                unset($_SESSION['message']);
+            }
+
+            //parsing the rating of the song
+            if ($ratingCount != '') {
+                $this->tpl->setVar('SONG_RATING_COUNT', $ratingCount);
+            } else {
+                $this->tpl->setVar('SONG_RATING_COUNT', 0);
+            }
+
             if ($rating != '') {
                 if($rating['rating'] == 1) {
                     $this->tpl->setVar('SONG_RATING', $rating['rating']); 
@@ -81,26 +96,39 @@ class Sound_View extends View
                 } else {
                     $this->tpl->setVar('SONG_RATING', $rating['rating']);
                     $this->tpl->setVar('SONG_RATING_ICON', 'glyphicon glyphicon-heart-empty');
-
                 }
             } else {
                 $this->tpl->setVar('SONG_RATING', 0);
                 $this->tpl->setVar('SONG_RATING_ICON', 'glyphicon glyphicon-heart-empty');
             }
-            
-
+            //parsing the song details
             foreach ($music as $details) {
                 foreach ($details as $key => $value) {
                 $this->tpl->setVar('SONG_'.strtoupper($key),$value); 
                 }
             }
-
+            //parsing the comments and the buttons for the logged user
             foreach ($commentList as $comment) {
+                if (isset($this->session->user->id)) {
+                    $this->tpl->parse('song_comment_list_button_logged_block', '');
+                    
+                    if ($comment['userId'] == $this->session->user->id) {
+                       $this->tpl->parse('song_comment_list_button_logged_block', 'song_comment_list_button_logged', TRUE);
+                    }
+                }
                 foreach ($comment as $replyKey => $replyValue) {
                     if ($replyKey != 'replies') {
                         $this->tpl->setVar('SONG_COMMENT_'.strtoupper($replyKey), $replyValue);
                     } else {
                         foreach ($replyValue as $reply) {
+                            if (isset($this->session->user->id)) {
+                                $this->tpl->parse('song_reply_list_button_logged_block', '');
+
+                                if ($reply['userId'] == $this->session->user->id) {
+                                   $this->tpl->parse('song_reply_list_button_logged_block', 'song_reply_list_button_logged', TRUE); 
+                                }
+                            }
+
                             foreach ($reply as $key => $value) {
                                 $this->tpl->setVar('SONG_REPLY_'.strtoupper($key), $value);
                             }
@@ -111,6 +139,6 @@ class Sound_View extends View
                 $this->tpl->parse('song_comment_list_block', 'song_comment_list', TRUE);
                 $this->tpl->parse('song_reply_list_block', '');
             }
-        }
+        }     
     }
 }
