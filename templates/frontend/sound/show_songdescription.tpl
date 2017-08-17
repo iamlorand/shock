@@ -41,6 +41,7 @@ $(document).ready(function(){
                     $('#rating').val('1');
                     $('#rating').removeClass('glyphicon glyphicon-heart-empty').addClass('glyphicon glyphicon-heart');
                 }
+                $('#ratingCount').text(response['count'] + ' likes');
             }
         });
     }
@@ -65,6 +66,7 @@ function reply(id)
                 <tr>
                     <td colspan="2" style="text-align: center;">
                         <button class="{SONG_RATING_ICON}" id="rating" value="{SONG_RATING}" onclick="likeUnlike(this)" style="width: 50px; height: auto;"></button>
+                        | <b id="ratingCount">{SONG_RATING_COUNT} likes</b>
                     </td>
                 </tr>
                 <tr>
@@ -98,11 +100,13 @@ function reply(id)
 
         <br>
         <em style="font-size: 10px;">&nbsp; posted · {SONG_COMMENT_DATE}</em>
+        <!-- BEGIN song_comment_list_button_logged -->
         <form method="POST" action="" style="float: right;">
             <button name="delete" title="Delete" value="{SONG_COMMENT_ID}">&#10007;</button>
         </form>
         <button id="{SONG_COMMENT_ID}" class="edit" title="Edit" style="float: right;">&#9998;</button>
         <button id="{SONG_COMMENT_ID}" class="reply_{SONG_COMMENT_ID}" onclick= "reply({SONG_COMMENT_ID})" title="Reply" style="float: right;">&#8476;</button>
+        <!-- END song_comment_list_button_logged -->
     </li>
 
     <div id="t1_{SONG_COMMENT_ID}" style="display:none;">
@@ -121,17 +125,19 @@ function reply(id)
 
         <br>
         <em style="font-size: 10px;">&nbsp; posted · {SONG_REPLY_DATE}</em>
+        <!-- BEGIN song_reply_list_button_logged -->
         <form method="POST" action="" style="float: right;">
             <button name="delete" title="Delete" value="{SONG_REPLY_ID}">&#10007;</button>
         </form>
         <button id="{SONG_REPLY_ID}" class="edit" title="Edit" style="float: right;">&#9998;</button>
+        <!-- END song_reply_list_button_logged -->
     </li>
     <!-- END song_reply_list -->
     
     <hr>
 <!-- END song_comment_list -->
     <form class="comment" method="POST" action="">
-        <textarea name="text" placeholder="Comment here..." maxlength="500"></textarea>
+        <textarea name="text" placeholder="Comment here..." maxlength="500">{SONG_COMMENT_POST}</textarea>
         <button type="submit">Post comment!</button>
     </form>
 
