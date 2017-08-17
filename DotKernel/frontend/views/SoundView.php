@@ -26,9 +26,12 @@ class Sound_View extends View
         $this->tpl->setVar('PAGE',$page);
         foreach ($list['data'] as $list => $music) {
             foreach ($music as $key => $value) {
-               
-             $this->tpl->setVar(strtoupper($key),$value); 
-             }
+                if ($key == 'thumbnail' && $value == '') {
+                    $this->tpl->setVar(strtoupper($key), '{SITE_URL}images/frontend/vinyl_default.jpg');
+                } else {
+                    $this->tpl->setVar(strtoupper($key),$value); 
+                }
+            }
         $this->tpl->parse('list_music_block','list_music',true);
        } 
     }
@@ -104,7 +107,12 @@ class Sound_View extends View
             //parsing the song details
             foreach ($music as $details) {
                 foreach ($details as $key => $value) {
-                $this->tpl->setVar('SONG_'.strtoupper($key),$value); 
+                    if ($key == 'thumbnail' && $value == '') {
+                        $this->tpl->setVar('SONG_'.strtoupper($key), '{SITE_URL}images/frontend/vinyl_default.jpg');
+                    } else {
+                        $this->tpl->setVar('SONG_'.strtoupper($key),$value);
+                    }
+                 
                 }
             }
             //parsing the comments and the buttons for the logged user

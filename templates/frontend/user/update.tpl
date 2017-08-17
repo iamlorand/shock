@@ -1,7 +1,12 @@
-<form action="{SITE_URL}/user/account/" method="post">
+<form action="{SITE_URL}/user/account/" method="post" enctype="multipart/form-data">
 <input type="hidden" name="userToken" value="{USERTOKEN}">
 	<ul class="form">
-	<li class="clearfix">
+		<li class="clearfix">
+			<label for="firstName">User avatar:</label>
+			<img src="{SITE_URL}/{AVATAR}" style="width: 200px; height: auto;">
+			<input type="file" name="avatar" style="margin-left: 140px; margin-top: 10px;">
+		</li>
+		<li class="clearfix">
 			<label for="firstName">First Name:</label>
 			<input type="text" name="firstName" value="{FIRSTNAME}" id="firstName" />
 		</li>

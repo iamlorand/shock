@@ -134,6 +134,7 @@ class User extends Dot_Model_User
 			if($returnURL != '')
 			{
 				$link = $returnURL;
+				unset($_SESSION['redirectURL']);
 			}
 			else
 			{

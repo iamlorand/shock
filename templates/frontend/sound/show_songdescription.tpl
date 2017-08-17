@@ -67,6 +67,10 @@ function reply(id)
                     <td colspan="2" style="text-align: center;">
                         <button class="{SONG_RATING_ICON}" id="rating" value="{SONG_RATING}" onclick="likeUnlike(this)" style="width: 50px; height: auto;"></button>
                         | <b id="ratingCount">{SONG_RATING_COUNT} likes</b>
+                        <br>
+                        <audio controls>
+                            <source src="{SITE_URL}/{SONG_FILENAME}" type="audio/mpeg">
+                        </audio>
                     </td>
                 </tr>
                 <tr>
