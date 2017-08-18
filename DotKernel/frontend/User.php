@@ -138,7 +138,7 @@ class User extends Dot_Model_User
 			}
 			else
 			{
-				$link = isset($session->wantUrl) ? $session->wantUrl : $this->config->website->params->url.'/user/account';
+				$link = isset($session->wantUrl) ? $session->wantUrl : $this->config->website->params->url . '/user/account';
 			}
 			
 			header('location: '.$link);

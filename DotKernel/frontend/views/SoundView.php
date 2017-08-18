@@ -117,28 +117,28 @@ class Sound_View extends View
             }
             //parsing the comments and the buttons for the logged user
             foreach ($commentList as $comment) {
-                if (isset($this->session->user->id)) {
-                    $this->tpl->parse('song_comment_list_button_logged_block', '');
-                    
-                    if ($comment['userId'] == $this->session->user->id) {
-                       $this->tpl->parse('song_comment_list_button_logged_block', 'song_comment_list_button_logged', TRUE);
-                    }
-                }
                 foreach ($comment as $replyKey => $replyValue) {
                     if ($replyKey != 'replies') {
                         $this->tpl->setVar('SONG_COMMENT_'.strtoupper($replyKey), $replyValue);
-                    } else {
-                        foreach ($replyValue as $reply) {
-                            if (isset($this->session->user->id)) {
-                                $this->tpl->parse('song_reply_list_button_logged_block', '');
-
-                                if ($reply['userId'] == $this->session->user->id) {
-                                   $this->tpl->parse('song_reply_list_button_logged_block', 'song_reply_list_button_logged', TRUE); 
-                                }
+                        //parsing the buttons on the comments for the logged users
+                        if (isset($this->session->user->id)) {
+                            $this->tpl->parse('song_comment_list_button_logged_block', '');
+                            if ($comment['userId'] == $this->session->user->id) {
+                               $this->tpl->parse('song_comment_list_button_logged_block', 'song_comment_list_button_logged', TRUE);
                             }
-
+                        }
+                    } 
+                    else {
+                        foreach ($replyValue as $reply) {
                             foreach ($reply as $key => $value) {
                                 $this->tpl->setVar('SONG_REPLY_'.strtoupper($key), $value);
+                                //parsing the buttons on the replys for the logged users 
+                                if (isset($this->session->user->id)) {
+                                    $this->tpl->parse('song_reply_list_button_logged_block', '');
+                                    if ($reply['userId'] == $this->session->user->id) {
+                                       $this->tpl->parse('song_reply_list_button_logged_block', 'song_reply_list_button_logged', TRUE); 
+                                    }
+                                }
                             }
                             $this->tpl->parse('song_reply_list_block', 'song_reply_list', TRUE);
                         }

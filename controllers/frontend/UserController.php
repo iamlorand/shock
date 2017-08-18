@@ -33,7 +33,7 @@ switch ($registry->requestAction)
 		}
 		else
 		{
-			header('Location: '.$registry->configuration->website->params->url.'/user/account');
+			header('Location: '.$registry->configuration->website->params->url . '/user/login');
 			exit;
 		}
 	break;
@@ -164,6 +164,10 @@ switch ($registry->requestAction)
 					}
 				}
 			}
+			// Zend_Debug::dump($_FILES);
+			// Zend_Debug::dump($_POST);
+			// Zend_Debug::dump($countError);
+			// exit;
 			// POST values that will be validated
 			$values = array('details' => 
 								array('firstName'=>(isset($_POST['firstName']) ? $_POST['firstName'] : ''),
@@ -182,11 +186,11 @@ switch ($registry->requestAction)
 			{
 				// no error - then add user
 			
-					$avatar_file = '';
-					$avatar_dir = "uploads/userAvatar/";
-					$avatar_name = $_FILES['profilePicture']['name'] . '_' . $_POST['email'] . '.jpg';
-					$avatar_file = $avatar_dir . $avatar_name;
-					move_uploaded_file($_FILES["profilePicture"]["tmp_name"], $avatar_file);
+				$avatar_file = '';
+				$avatar_dir = "uploads/userAvatar/";
+				$avatar_name = $_FILES['profilePicture']['name'] . '_' . $_POST['email'] . '.jpg';
+				$avatar_file = $avatar_dir . $avatar_name;
+				move_uploaded_file($_FILES["profilePicture"]["tmp_name"], $avatar_file);
 				
 				$data = $dotValidateUser->getData();
 				$data['avatar'] = $avatar_file;
@@ -204,6 +208,7 @@ switch ($registry->requestAction)
 					$data = $dotValidateUser->getData();
 					unset($data['password']);
 				}
+				var_dump($countError);
 				header('location: '.$registry->configuration->website->params->url . '/user/register');
 				exit;
 			}
@@ -213,7 +218,7 @@ switch ($registry->requestAction)
 			// return $data and $error as json
 		}
 		$userView->details('add',$data);
-	break;
+		break;
 	case 'forgot-password':
 		// send an emai with the forgotten password
 		$data = array();
@@ -298,7 +303,7 @@ switch ($registry->requestAction)
 	case 'logout':
 		$dotAuth = Dot_Auth::getInstance();
 		$dotAuth->clearIdentity('user');
-		header('location: '.$registry->configuration->website->params->url . '/user/register');
+		header('location: '.$registry->configuration->website->params->url . '/user/login');
 		exit;
 	break;
 }
