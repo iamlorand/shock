@@ -14,16 +14,6 @@ switch ($registry->requestAction)
         $upload = $soundView->upload('upload');
         if ($_SERVER['REQUEST_METHOD'] == 'POST')
         {
-            $data['title']=(isset($_POST['title'])) ? strip_tags($_POST['title']) : '';
-            $data['description']=(isset($_POST['description'])) ? strip_tags($_POST['description']) : '';
-            $data['tags']=(isset($_POST['tags'])) ? strip_tags($_POST['tags']) : '';
-            $values =   ['title' => ['title' => $data['title']],
-                         'description' => ['description' => $data['description']],
-                         'tags' => ['tags' => $data['tags']]
-                    ];
-                    
-            $validator = new Dot_Validate_Sound(['values' => $values]);
-
             $music_dir = "uploads/music/";
             $thumbnail_dir = "uploads/thumbnails/";
             $music_file = $music_dir . basename($_FILES["fileToUpload"]["name"]);

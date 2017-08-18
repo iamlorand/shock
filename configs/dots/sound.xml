@@ -26,35 +26,6 @@
                     <show>Show song details</show>
                 </action>
             </pageTitle>
-            <infoMessage>
-                <songAdd>Song added ! </songAdd>
-                <songUpdate>Song updated ! </songUpdate>
-                <songDelete>Song was deleted ! </songDelete>
-                <noSongDelete>No song was deleted ! </noSongDelete>
-                <noStringLength>Prea putine caratctere! </noStringLength>
-            </infoMessage>
-            <validate>
-                <title>
-                    <StringLength> 
-                        <min>3</min>
-                        <max>30</max>
-                    </StringLength> 
-                </title>
-                <description>
-                    <StringLength> 
-                        <min>5</min>
-                        <max>100</max>
-                    </StringLength> 
-
-                </description>
-                <tags>
-                    <StringLength> 
-                        <min>5</min>
-                        <max>50</max>
-                    </StringLength> 
-
-                </tags>
-            </validate>
         </variable>
         <variable option="mobile">
             <pageTitle>
