@@ -18,7 +18,7 @@
                 <br>
                 <input type="file" name="fileToUpload" id="fileToUpload">
                 <br>
-                <input type="text" name="title" placeholder="Title">
+                <input type="text" name="title" placeholder="" aceholder="Title">
                 <br>
                 <textarea name="description" placeholder="Description"></textarea>
                 <br>

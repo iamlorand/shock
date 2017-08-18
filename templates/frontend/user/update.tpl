@@ -1,6 +1,11 @@
-<form action="{SITE_URL}/user/account/" method="post">
+<form action="{SITE_URL}/user/account/" method="post" enctype="multipart/form-data">
 <input type="hidden" name="userToken" value="{USERTOKEN}">
 	<ul class="form">
+	<li class="clearfix">
+			<label for="image">Select Profile Picture:</label>
+			<img src="{SITE_URL}/images/frontend/userAvatar/default.jpg" style="width: 200px; height: auto;">
+			<input type="file"  name="image" id="image">
+		</li>
 	<li class="clearfix">
 			<label for="firstName">First Name:</label>
 			<input type="text" name="firstName" value="{FIRSTNAME}" id="firstName" />
