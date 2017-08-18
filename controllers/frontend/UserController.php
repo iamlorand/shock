@@ -183,10 +183,12 @@ switch ($registry->requestAction)
 				// no error - then add user
 			
 				$avatar_file = '';
-				$avatar_dir = "uploads/userAvatar/";
-				$avatar_name = $_FILES['profilePicture']['name'] . '_' . $_POST['email'] . '.jpg';
-				$avatar_file = $avatar_dir . $avatar_name;
-				move_uploaded_file($_FILES["profilePicture"]["tmp_name"], $avatar_file);
+				if ($_FILES["profilePicture"]["tmp_name"]) {
+					$avatar_dir = "uploads/userAvatar/";
+					$avatar_name = $_FILES['profilePicture']['name'] . '_' . $_POST['email'] . '.jpg';
+					$avatar_file = $avatar_dir . $avatar_name;
+					move_uploaded_file($_FILES["profilePicture"]["tmp_name"], $avatar_file);
+				}
 				
 				$data = $dotValidateUser->getData();
 				$data['avatar'] = $avatar_file;
