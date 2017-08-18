@@ -18,15 +18,23 @@ switch ($registry->requestAction)
             $thumbnail_dir = "uploads/thumbnails/";
             $music_file = $music_dir . basename($_FILES["fileToUpload"]["name"]);
             $thumbnail_file = $thumbnail_dir . basename($_FILES["thumbnail"]["name"]);
-
+            if ($_FILES["thumbnail"]["name"] == '') {
+                $thumbnail_file = '';
+            }
+            
             $insertArray = [];
             $insertArray['filename'] = $music_file;
             $insertArray['userId'] = $session->user->id;
             $insertArray['thumbnail'] = $thumbnail_file;
             $insertArray = array_merge($insertArray, $_POST);
-            move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $music_file);
-            move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $thumbnail_file);
+            $uplSong = move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $music_file);
+            $uplThumb = move_uploaded_file($_FILES["thumbnail"]["tmp_name"], $thumbnail_file);
+
             $soundModel->insertUpload($insertArray);
+            if ($uplSong == true) {
+                header('Location:'.$registry->configuration->website->params->url .'/' . $registry->requestController);
+                exit;
+            }
         }
         break;
 
@@ -92,7 +100,7 @@ switch ($registry->requestAction)
             $id = $registry->request['id'];
             $song = $soundModel->getSongById($id);
             $soundView->showDeleteConfirmation('delete_song', $song);
-             if ($_SERVER['REQUEST_METHOD'] == 'POST')
+            if ($_SERVER['REQUEST_METHOD'] == 'POST')
             {
                 if ('on' == $_POST['confirm'])
                 {

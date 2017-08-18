@@ -33,7 +33,7 @@ switch ($registry->requestAction)
 		}
 		else
 		{
-			header('Location: '.$registry->configuration->website->params->url.'/user/account');
+			header('Location: '.$registry->configuration->website->params->url . '/user/login');
 			exit;
 		}
 	break;
@@ -126,6 +126,13 @@ switch ($registry->requestAction)
 				// no error - then update user
 				$data = $dotValidateUser->getData();
 				$data['id'] = $registry->session->user->id;
+				//setting custom avatar
+
+				
+				$avatar_dir = "uploads/userAvatar/";
+				$avatar_file = $avatar_dir . basename($_FILES["avatar"]["name"]);
+				move_uploaded_file($_FILES["avatar"]["tmp_name"], $avatar_file);
+				$data['avatar'] = $avatar_file;
 				$userModel->updateUser($data);
 				$session->message['txt'] = $option->infoMessage->update;
 				$session->message['type'] = 'info';
@@ -144,8 +151,23 @@ switch ($registry->requestAction)
 		// display signup form and allow user to register
 		$data = array();
 		$error = array();
+		$countError = [];
 		if ($_SERVER['REQUEST_METHOD'] === "POST")
 		{
+			if (file_exists($_FILES['profilePicture']['tmp_name']))
+			{
+				foreach ($_FILES['profilePicture'] as $type => $dataValue) {
+					$validatedFile = validateImg($type, $dataValue);
+					if($validatedFile !== true)
+					{
+						$countError[$type] = $validatedFile;
+					}
+				}
+			}
+			// Zend_Debug::dump($_FILES);
+			// Zend_Debug::dump($_POST);
+			// Zend_Debug::dump($countError);
+			// exit;
 			// POST values that will be validated
 			$values = array('details' => 
 								array('firstName'=>(isset($_POST['firstName']) ? $_POST['firstName'] : ''),
@@ -160,10 +182,18 @@ switch ($registry->requestAction)
 							// 				   'recaptcha_response_field' => (isset($_POST['recaptcha_response_field']) ? $_POST['recaptcha_response_field'] : ''))
 						  );
 			$dotValidateUser = new Dot_Validate_User(array('who' => 'user', 'action' => 'add', 'values' => $values));
-			if($dotValidateUser->isValid())
+			if($dotValidateUser->isValid() && empty($countError))
 			{
 				// no error - then add user
+			
+				$avatar_file = '';
+				$avatar_dir = "uploads/userAvatar/";
+				$avatar_name = $_FILES['profilePicture']['name'] . '_' . $_POST['email'] . '.jpg';
+				$avatar_file = $avatar_dir . $avatar_name;
+				move_uploaded_file($_FILES["profilePicture"]["tmp_name"], $avatar_file);
+				
 				$data = $dotValidateUser->getData();
+				$data['avatar'] = $avatar_file;
 				$userModel->addUser($data);
 				$session->message['txt'] = $option->infoMessage->add;
 				$session->message['type'] = 'info';
@@ -178,15 +208,17 @@ switch ($registry->requestAction)
 					$data = $dotValidateUser->getData();
 					unset($data['password']);
 				}
+				var_dump($countError);
+				header('location: '.$registry->configuration->website->params->url . '/user/register');
+				exit;
 			}
 			// add action and validation are made with ajax, so return json string
-			header('Content-type: application/json');  
-			echo Zend_Json::encode(array('data'=>$dotValidateUser->getData(), 'error'=>$dotValidateUser->getError()));
+			// header('Content-type: application/json');  
+			// echo Zend_Json::encode(array('data'=>$dotValidateUser->getData(), 'error'=>$dotValidateUser->getError()));
 			// return $data and $error as json
-			exit;
 		}
 		$userView->details('add',$data);
-	break;
+		break;
 	case 'forgot-password':
 		// send an emai with the forgotten password
 		$data = array();
@@ -271,7 +303,36 @@ switch ($registry->requestAction)
 	case 'logout':
 		$dotAuth = Dot_Auth::getInstance();
 		$dotAuth->clearIdentity('user');
-		header('location: '.$registry->configuration->website->params->url);
+		header('location: '.$registry->configuration->website->params->url . '/user/login');
 		exit;
 	break;
+}
+
+function validateImg($type, $data)
+{
+	$errors = [];
+	if($type == 'size')
+	{
+		$allowedSize = 2097152;
+		if($data > $allowedSize)
+		{
+			$errors[] = "Your image size " . $data . " is too big!";
+		}
+	}
+	if($type == 'type')
+	{
+		$allowedType = ["image/jpeg" => "image/jpeg"];
+		if(!array_key_exists($data, $allowedType))
+		{
+			$errors[] = "Your image type " . $data . " is not allowed!";
+		}
+	}
+	if(count($errors) === 0)
+	{
+		return true;
+	}
+	else
+	{
+		return $errors;
+	}
 }

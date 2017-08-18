@@ -67,6 +67,10 @@ function reply(id)
                     <td colspan="2" style="text-align: center;">
                         <button class="{SONG_RATING_ICON}" id="rating" value="{SONG_RATING}" onclick="likeUnlike(this)" style="width: 50px; height: auto;"></button>
                         | <b id="ratingCount">{SONG_RATING_COUNT} likes</b>
+                        <br>
+                        <audio controls>
+                            <source src="{SITE_URL}/{SONG_FILENAME}" type="audio/mpeg">
+                        </audio>
                     </td>
                 </tr>
                 <tr>
@@ -105,8 +109,8 @@ function reply(id)
             <button name="delete" title="Delete" value="{SONG_COMMENT_ID}">&#10007;</button>
         </form>
         <button id="{SONG_COMMENT_ID}" class="edit" title="Edit" style="float: right;">&#9998;</button>
-        <button id="{SONG_COMMENT_ID}" class="reply_{SONG_COMMENT_ID}" onclick= "reply({SONG_COMMENT_ID})" title="Reply" style="float: right;">&#8476;</button>
         <!-- END song_comment_list_button_logged -->
+        <button id="{SONG_COMMENT_ID}" class="reply_{SONG_COMMENT_ID}" onclick= "reply({SONG_COMMENT_ID})" title="Reply" style="float: right;">&#8476;</button>
     </li>
 
     <div id="t1_{SONG_COMMENT_ID}" style="display:none;">
