@@ -117,4 +117,14 @@ class Sound extends Dot_Model
         $result = $this->db->fetchRow($select);
         return $result;
     }
+    #check a ratingCount in the table rating
+    public function checkRatingCount($soundId)
+    {
+        $select = $this->db->select()
+                            ->from('rating')
+                            ->where('soundId=?', $soundId)
+                            ->where('rating=?', 1);
+        $result = count($this->db->fetchAll($select));
+        return $result;
+    }
 }

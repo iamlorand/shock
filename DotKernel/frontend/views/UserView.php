@@ -87,7 +87,11 @@ class User_View extends View
 		$this->tpl->setFile('tpl_main', 'user/' . $templateFile . '.tpl');
 		foreach ($data as $k=>$v)
 		{
-			$this->tpl->setVar(strtoupper($k), $v);
+			if ($k == 'avatar' && $v == '') {
+                $this->tpl->setVar(strtoupper($k), '/images/frontend/avatar_default.jpg');
+            } else {
+                $this->tpl->setVar(strtoupper($k), $v); 
+            }
 		}
 		if('add' == $templateFile)
 		{

@@ -36,6 +36,11 @@
 			<label for="lastName">Last Name:</label>
 			<input type="text" name="lastName" value="{LASTNAME}" id="lastName" />
 		</li>
+		<li class="clearfix">
+			<label>Profile Picture:</label>
+			<input type="file" name="profilePicture" />
+			<input type="hidden" name="url" value="<?php echo htmlentities($_SERVER['REQUEST_URI'])>" />
+		</li>
 <!-- 		<li class="clearfix">
 			<label>Secure Image:</label>
 			<div id="secure_image">{SECUREIMAGE}</div>

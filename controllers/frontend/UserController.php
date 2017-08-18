@@ -33,7 +33,7 @@ switch ($registry->requestAction)
 		}
 		else
 		{
-			header('Location: '.$registry->configuration->website->params->url.'/user/account');
+			header('Location: '.$registry->configuration->website->params->url . '/user/login');
 			exit;
 		}
 	break;
@@ -48,7 +48,7 @@ switch ($registry->requestAction)
 			$dotValidateUser = new Dot_Validate_User(array('who' => 'user', 'action' => 'login', 'values' => $values));
 			if($dotValidateUser->isValid())
 			{
-				$userModel->authorizeLogin($dotValidateUser->getData());
+				$userModel->authorizeLogin($dotValidateUser->getData(), $_SESSION['redirectURL']);
 			}
 			else
 			{
@@ -148,6 +148,13 @@ switch ($registry->requestAction)
 				// no error - then update user
 				$data = $dotValidateUser->getData();
 				$data['id'] = $registry->session->user->id;
+				//setting custom avatar
+
+				
+				$avatar_dir = "uploads/userAvatar/";
+				$avatar_file = $avatar_dir . basename($_FILES["avatar"]["name"]);
+				move_uploaded_file($_FILES["avatar"]["tmp_name"], $avatar_file);
+				$data['avatar'] = $avatar_file;
 				$userModel->updateUser($data);
 				$session->message['txt'] = $option->infoMessage->update;
 				$session->message['type'] = 'info';
@@ -173,6 +180,7 @@ switch ($registry->requestAction)
 		// display signup form and allow user to register
 		$data = array();
 		$error = array();
+
 		$errorFile = [];
 		if ($_SERVER['REQUEST_METHOD'] === "POST")
 		{
@@ -201,6 +209,7 @@ switch ($registry->requestAction)
 							// 				   'recaptcha_response_field' => (isset($_POST['recaptcha_response_field']) ? $_POST['recaptcha_response_field'] : ''))
 						  );
 			$dotValidateUser = new Dot_Validate_User(array('who' => 'user', 'action' => 'add', 'values' => $values));
+
 			if($dotValidateUser->isValid() && empty($errorFile))
 			{
 				//if there was a picture uploaded and it is not a corupted file then move it to uploads and create the user
@@ -209,8 +218,17 @@ switch ($registry->requestAction)
 					$target_file = $target_dir . $filename;
 					move_uploaded_file($_FILES["profilePicture"]["tmp_name"], $target_file);
 				// no error - then add user
+			
+				$avatar_file = '';
+				$avatar_dir = "uploads/userAvatar/";
+				$avatar_name = $_FILES['profilePicture']['name'] . '_' . $_POST['email'] . '.jpg';
+				$avatar_file = $avatar_dir . $avatar_name;
+				move_uploaded_file($_FILES["profilePicture"]["tmp_name"], $avatar_file);
+				
 				$data = $dotValidateUser->getData();
+
 				$data['image'] = $target_file;
+
 				$userModel->addUser($data);
 				$session->message['txt'] = $option->infoMessage->add;
 				$session->message['type'] = 'info';
@@ -227,6 +245,7 @@ switch ($registry->requestAction)
 					$data = $dotValidateUser->getData();
 					unset($data['password']);
 				}
+
 				header('location: '.$registry->configuration->website->params->url . '/user/register/');
 				exit;
 			}
@@ -234,10 +253,9 @@ switch ($registry->requestAction)
 			// header('Content-type: application/json');  
 			// echo Zend_Json::encode(array('data'=>$dotValidateUser->getData(), 'error'=>$dotValidateUser->getError()));
 			// return $data and $error as json
-			exit;
 		}
 		$userView->details('add',$data);
-	break;
+		break;
 	case 'forgot-password':
 		// send an emai with the forgotten password
 		$data = array();
@@ -322,10 +340,9 @@ switch ($registry->requestAction)
 	case 'logout':
 		$dotAuth = Dot_Auth::getInstance();
 		$dotAuth->clearIdentity('user');
-		header('location: '.$registry->configuration->website->params->url);
+		header('location: '.$registry->configuration->website->params->url . '/user/login');
 		exit;
-	break;
-	
+	break;	
 }
 
 function validateImage($type, $data)
@@ -346,11 +363,10 @@ function validateImage($type, $data)
 			$errors[] = "Image is to big ! Chose an image that is below" . $data . " size !";
 		}
 	}	
+
 	if(count($errors) === 0)
 	{
 		return true;
 	}
-	else {
 		return $errors ;
-	}
 }

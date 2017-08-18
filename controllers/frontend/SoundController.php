@@ -28,15 +28,23 @@ switch ($registry->requestAction)
             $thumbnail_dir = "uploads/thumbnails/";
             $music_file = $music_dir . basename($_FILES["fileToUpload"]["name"]);
             $thumbnail_file = $thumbnail_dir . basename($_FILES["thumbnail"]["name"]);
-
+            if ($_FILES["thumbnail"]["name"] == '') {
+                $thumbnail_file = '';
+            }
+            
             $insertArray = [];
             $insertArray['filename'] = $music_file;
             $insertArray['userId'] = $session->user->id;
             $insertArray['thumbnail'] = $thumbnail_file;
             $insertArray = array_merge($insertArray, $_POST);
-            move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $music_file);
-            move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $thumbnail_file);
+            $uplSong = move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $music_file);
+            $uplThumb = move_uploaded_file($_FILES["thumbnail"]["tmp_name"], $thumbnail_file);
+
             $soundModel->insertUpload($insertArray);
+            if ($uplSong == true) {
+                header('Location:'.$registry->configuration->website->params->url .'/' . $registry->requestController);
+                exit;
+            }
         }
         break;
 
@@ -49,10 +57,18 @@ switch ($registry->requestAction)
     case 'show_song':
         $id = $registry->request['id'];
         $song = $soundModel->getSongById($id);
+        $ratingCount = $soundModel->checkRatingCount($id);
 
         if(!isset($session->user->id)) {
             $comments = $soundModel->getReplysAndCommentsById($id);
-            $soundView->showSongById('show_songdescription', $song, $comments);
+            $soundView->showSongById('show_songdescription', $song, $comments, '', $ratingCount);
+
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $_SESSION['message'] = $_POST['text'];
+                $_SESSION['redirectURL'] = 'http://' . $_SERVER["SERVER_NAME"] . $_SERVER['REQUEST_URI'];
+                header('Location:' . $registry->configuration->website->params->url . '/user/login?returnurl=' . $_SESSION['redirectURL']);
+                exit;
+            }
         } else {
             $checkRating = $soundModel->checkRating($id, $session->user->id);
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -84,7 +100,7 @@ switch ($registry->requestAction)
                 } 
             }
             $comments = $soundModel->getReplysAndCommentsById($id);
-            $soundView->showSongById('show_songdescription', $song, $comments, $checkRating);
+            $soundView->showSongById('show_songdescription', $song, $comments, $checkRating, $ratingCount);
         }
 
         break;
@@ -94,7 +110,7 @@ switch ($registry->requestAction)
             $id = $registry->request['id'];
             $song = $soundModel->getSongById($id);
             $soundView->showDeleteConfirmation('delete_song', $song);
-             if ($_SERVER['REQUEST_METHOD'] == 'POST')
+            if ($_SERVER['REQUEST_METHOD'] == 'POST')
             {
                 if ('on' == $_POST['confirm'])
                 {
@@ -129,10 +145,7 @@ switch ($registry->requestAction)
     case 'rating':
         if (($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['status']))) {                
             if (($_POST['status'] == 0) || ($_POST['status'] == 1)){
-                $result = [
-                    "success" => "true",
-                    "status" => -1 * $_POST['status'] + 1
-                    ];
+                
                 $queryArray = [];
                 $queryArray['soundId'] = $_POST['soundId'];
                 $queryArray['userId'] = $session->user->id;
@@ -144,6 +157,13 @@ switch ($registry->requestAction)
                 } else {
                     $soundModel->updateRating($queryArray, $checkRating['id']);
                 }
+
+                $result = [
+                    "success" => "true",
+                    "status" => -1 * $_POST['status'] + 1,
+                    "count" => $soundModel->checkRatingCount($_POST['soundId'])
+                    ];
+
                 echo Zend_Json::encode($result);
                 exit();
             }
