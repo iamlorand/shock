@@ -7,6 +7,12 @@
 <form id="userRegister" action="" method="post" enctype="multipart/form-data">
 	<ul class="form">
 		<li class="clearfix">
+			<label for="username">Profile Picture:</label>
+
+			<input  type="file"  name="profilePicture"/>
+			<input type="hidden" name="url" value="<?php echo htmlentities($_SERVER['REQUEST_URI'])>"/>
+		</li>
+		<li class="clearfix">
 			<label for="username">Username:</label>
 			<input id="username" type="text" value="{USERNAME}" name="username">
 		</li>
