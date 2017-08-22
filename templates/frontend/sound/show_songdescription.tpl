@@ -211,12 +211,17 @@ function playPause(){
 }
 
 function songSeek(){
-    song.pause();
-    totalTime += song.currentTime - startTime;
-    var seekto = song.duration * (seekslider.value / 100);
-    song.currentTime = seekto;
-    song.play();
-    startTime = song.currentTime;
+    if(!song.paused){
+        song.pause();
+        totalTime += song.currentTime - startTime;
+        var seekto = song.duration * (seekslider.value / 100);
+        song.currentTime = seekto;
+        song.play();
+        startTime = song.currentTime;
+    } else {
+        var seekto = song.duration * (seekslider.value / 100);
+        song.currentTime = seekto;
+    }
 }
 
 function seektimeupdate(){
