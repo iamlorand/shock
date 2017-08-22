@@ -47,7 +47,7 @@ switch ($registry->requestAction)
     case 'show_song':
         $id = $registry->request['id'];
         $song = $soundModel->getSongById($id);
-        $ratingCount = $soundModel->checkRatingCount($id);
+        $ratingCount = $soundModel->checkRatingCount($id);    
 
         if(!isset($session->user->id)) {
             $comments = $soundModel->getReplysAndCommentsById($id);
@@ -158,5 +158,32 @@ switch ($registry->requestAction)
                 exit();
             }
         }
+        break;
+
+    case 'viewed':
+        //updating viewCount
+        $id = $_POST['soundId'];
+        $song = $soundModel->getSongById($id);
+
+        $response = [
+                'success' => false,
+                'message' => 'Invalid viewed parameter provided!',
+                'data' => [
+                            'viewed' => false
+                        ]
+            ];
+        $viewed = $_POST['viewed'] ?? 'error';
+        if ($viewed == true) {
+            $viewIncrement = [];
+            $viewIncrement['viewCount'] = ++$song['viewCount'];
+            $soundModel->updateViewCount($viewIncrement, $id);
+            $response['data']['viewed'] = true;
+            $response['success'] = true;
+            $response['message'] = 'viewed successfully';
+
+            echo Zend_Json::encode($response);
+            exit();
+        }
+        
         break;
 }
