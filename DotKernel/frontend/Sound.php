@@ -37,7 +37,7 @@ class Sound extends Dot_Model
         $select = $this->db->select()
                             ->from('sound')
                             ->where('id=?', $id);
-        $result = $this->db->fetchAll($select);
+        $result = $this->db->fetchRow($select);
         return $result;
     }
   #gets all comments by id from table comment
@@ -126,5 +126,10 @@ class Sound extends Dot_Model
                             ->where('rating=?', 1);
         $result = count($this->db->fetchAll($select));
         return $result;
+    }
+    #updates a viewCount into the table sound
+    public function updateViewCount($data, $id)
+    {
+        $update = $this->db->update('sound', $data, 'id = ' . $id);
     }
 }

@@ -23,7 +23,7 @@
 		<header>
 			<div id="header-content" class="clearfix">
 				<div id="logo">
-					<h1><a href="{SITE_URL}/"><img src="{SITE_URL}/uploads/icons/kernelwave.png">SoundKernel</a></h1>
+					<h1><a href="{SITE_URL}/"><img src="{SITE_URL}/uploads/icons/kernelwave.png"><b>SoundKernel</b></a></h1>
 				</div>
 				{MENU_TOP}
 			</div>
