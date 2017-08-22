@@ -105,16 +105,16 @@ class Sound_View extends View
                 $this->tpl->setVar('SONG_RATING_ICON', 'glyphicon glyphicon-heart-empty');
             }
             //parsing the song details
-            foreach ($music as $details) {
-                foreach ($details as $key => $value) {
-                    if ($key == 'thumbnail' && $value == '') {
-                        $this->tpl->setVar('SONG_'.strtoupper($key), '{SITE_URL}images/frontend/vinyl_default.jpg');
-                    } else {
-                        $this->tpl->setVar('SONG_'.strtoupper($key),$value);
-                    }
-                 
+
+            foreach ($music as $key => $value) {
+                if ($key == 'thumbnail' && $value == '') {
+                    $this->tpl->setVar('SONG_'.strtoupper($key), '{SITE_URL}images/frontend/vinyl_default.jpg');
+                } else {
+                    $this->tpl->setVar('SONG_'.strtoupper($key),$value);
                 }
+             
             }
+
             //parsing the comments and the buttons for the logged user
             foreach ($commentList as $comment) {
                 foreach ($comment as $replyKey => $replyValue) {
