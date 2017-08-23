@@ -43,10 +43,8 @@ class Sound_View extends View
         {
             $this->template = $template;
             $this->tpl->setFile('tpl_main', 'sound/' . $this->template . '.tpl');
-            foreach ($music as $musicContent) {
-                foreach ($musicContent as $key => $value) {
-                    $this->tpl->setVar('SONG_'.strtoupper($key), $value);
-                }
+            foreach ($music as $key => $value) {
+                $this->tpl->setVar('SONG_'.strtoupper($key), $value);
             }
         }
     }
@@ -58,10 +56,8 @@ class Sound_View extends View
         {
             $this->template = $template;
             $this->tpl->setFile('tpl_main', 'sound/' . $this->template . '.tpl');
-            foreach ($music as $musicContent) {
-                foreach ($musicContent as $key => $value) {
-                    $this->tpl->setVar('SONG_'.strtoupper($key), $value);
-                }
+            foreach ($music as $key => $value) {
+                $this->tpl->setVar('SONG_'.strtoupper($key), $value);
             }
         }
     }
