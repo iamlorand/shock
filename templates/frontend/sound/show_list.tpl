@@ -1,15 +1,19 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <form action="" method="POST">
+    Search: <input type="text" name="search" placeholder=" Search here ... "/>
+    <input type="submit" value="Submit" />
+    </form> 
 
-<div id="userList" class="box-shadow">
+
     <table class="table table-bordered">
         <thead>
             <tr>
                 <th style="text-align: center; width: 20px;">#</th>
                 <th>THUMBNAIL</th>
                 <th>TITLE</th>
-                <th>PREVIEW</th>
                 <th>Share </th>
+                <th>PREVIEW</th>
                 <th>VIEWCOUNT</th>
                 <th width="230px">Action</th>
             </tr>
