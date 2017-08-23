@@ -51,8 +51,7 @@ switch ($registry->requestAction)
 
         if(!isset($session->user->id)) {
             $comments = $soundModel->getReplysAndCommentsById($id);
-            $soundView->showSongById('show_songdescription', $song, $comments, '', $ratingCount);
-
+            $soundView->showSongById('show_songdescription',$song, $comments, '', $ratingCount);
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $_SESSION['message'] = $_POST['text'];
                 $_SESSION['redirectURL'] = 'http://' . $_SERVER["SERVER_NAME"] . $_SERVER['REQUEST_URI'];

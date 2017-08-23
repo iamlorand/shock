@@ -89,6 +89,10 @@ function reply(id)
                 <tr>
                     <td colspan="2"><img src="{SITE_URL}/{SONG_THUMBNAIL}" style="width: 200px; height: auto;"></td>
                 </tr>
+                 <tr>
+                    <td>Posted by :</td>
+                    <td>{SONG_USERNAME}</td>
+                </tr>
                 <tr>
                     <td>TITLE</td>
                     <td>{SONG_TITLE}</td>

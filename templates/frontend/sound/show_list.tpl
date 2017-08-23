@@ -4,10 +4,13 @@ var SITE_URL = "{SITE_URL}";
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!-- checks if a song was played for at least 35% -->
 <script type="text/javascript" src="{SITE_URL}/templates/js/frontend/audioplayer.js"></script>
-
-<script>
-
-</script>
+    
+    <form action="" method="POST">
+        Search: 
+            <input type="text" name="search" placeholder=" Search here ... "/>
+            <input type="submit" value="Submit" />
+    </form> 
+    
 <div id="userList" class="box-shadow">
     <table class="table table-bordered">
         <thead>

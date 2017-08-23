@@ -31,16 +31,17 @@ class Sound extends Dot_Model
     {
         $update = $this->db->update('sound', $a, 'id = ' . $id);
     }
-      #returns a record from table sound by id
+    #returns a record from table sound by id
     public function getSongById($id)
     {
-        $select = $this->db->select()
+          $select = $this->db->select()
                             ->from('sound')
-                            ->where('id=?', $id);
+                            ->where('sound.id=?', $id)
+                            ->join('user','user.id=sound.userId', ['username' => 'username']);
         $result = $this->db->fetchRow($select);
         return $result;
     }
-  #gets all comments by id from table comment
+    #gets all comments by id from table comment
     public function getCommentById($id)
     {
         $select = $this->db->select()
@@ -51,6 +52,18 @@ class Sound extends Dot_Model
         $result = $this->db->fetchAll($select);
         return $result;
     }
+
+    // public function searchSong() 
+    // { 
+    //     $select = $this->db->select()
+    //                         ->from('sound')
+    //                         ->where(
+    //     $result = $this->db->fetchRow($select);
+    //     return $result;
+      
+
+    // }
+
     #gets all replys by id from table comment
     public function getReplyById($id)
     {

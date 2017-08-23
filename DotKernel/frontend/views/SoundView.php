@@ -104,11 +104,10 @@ class Sound_View extends View
 
             foreach ($music as $key => $value) {
                 if ($key == 'thumbnail' && $value == '') {
-                    $this->tpl->setVar('SONG_'.strtoupper($key), '{SITE_URL}images/frontend/vinyl_default.jpg');
+                    $this->tpl->setVar('SONG_'.strtoupper($key), '{SITE_URL}images/frontend/vinyl_default.jpg'); 
                 } else {
                     $this->tpl->setVar('SONG_'.strtoupper($key),$value);
                 }
-             
             }
 
             //parsing the comments and the buttons for the logged user
