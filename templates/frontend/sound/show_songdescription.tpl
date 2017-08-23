@@ -12,6 +12,9 @@
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
+var SITE_URL = "{SITE_URL}";
+</script>
+<script>
 $(document).ready(function(){
     $(".edit").click(function(){
         var editid = $(this).attr("id");
@@ -61,15 +64,15 @@ function reply(id)
         
     </div>
     <div id="audio_player_box">
-      <audio id="song" width="550" height="300">
+      <audio id="song{SONG_ID}" songId="{SONG_ID}" btnSongId="{SONG_ID}" width="550" height="300">
         <source src="{SITE_URL}/{SONG_FILENAME}" type="audio/mpeg">
       </audio>
       <div id="audio_controls_bar">
-        <button id="playpausebtn">Play</button>
-        <input id="seekslider" type="range" min="0" max="100" value="0" step="1">
-        <span id="curtimetext">00:00</span> / <span id="durtimetext">00:00</span>
-        <button id="mutebtn">Mute</button>
-        <input id="volumeslider" type="range" min="0" max="100" value="100" step="1">
+        <button id="playpausebtn{SONG_ID}"   btnSongId="{SONG_ID}">Play</button>
+        <input id="seekslider{SONG_ID}"      btnSongId="{SONG_ID}" type="range" min="0" max="100" value="0" step="1">
+        <span id="curtimetext{SONG_ID}"      btnSongId="{SONG_ID}" >00:00</span> / <span id="durtimetext{SONG_ID}" btnSongId="{SONG_ID}">00:00</span>
+        <button id="mutebtn{SONG_ID}"        btnSongId="{SONG_ID}">Mute</button>
+        <input id="volumeslider{SONG_ID}"    btnSongId="{SONG_ID}" type="range" min="0" max="100" value="100" step="1">
       </div>
     </div>
     <div class="panel-body">
@@ -157,99 +160,5 @@ function reply(id)
 
 </div>
 
-<!-- checks if a song was played for at least 25% -->
-<script>
-var song, playbtn, seekslider, curtimetext, durtimetext, mutebtn, volumeslider, viewed = false, startTime = 0, totalTime = 0;
-var siteurl = "{SITE_URL}";
-var soundId = "{SONG_ID}";
-
-function intializePlayer(){
-    // Set object references
-    song = document.getElementById("song");
-    playbtn = document.getElementById("playpausebtn");
-    seekslider = document.getElementById("seekslider");
-    curtimetext = document.getElementById("curtimetext");
-    durtimetext = document.getElementById("durtimetext");
-    mutebtn = document.getElementById("mutebtn");
-    volumeslider = document.getElementById("volumeslider");
-    // Add event listeners
-    playbtn.addEventListener("click",playPause,false);
-    seekslider.addEventListener("change",songSeek,false);
-    song.addEventListener("timeupdate",seektimeupdate,false);
-    mutebtn.addEventListener("click",songMute,false);
-    volumeslider.addEventListener("change",setvolume,false);
-}
-window.onload = intializePlayer;
-
-function playPause(){
-    if(song.paused){
-        song.play();
-        playbtn.innerHTML = "Pause";
-        startTime = song.currentTime;
-    } else {
-        song.pause();
-        playbtn.innerHTML = "Play";
-        totalTime += song.currentTime - startTime;
-        var listened = (totalTime / song.duration) * 100;
-        console.log(listened);
-        if((listened > 35) && (viewed == false)) {
-            viewed = true;
-            var requestSettings = {
-                        'data' : {'viewed': viewed, 'soundId': soundId},
-                        'method' : 'POST'
-                    };
-            $.ajax(siteurl+"/sound/viewed", requestSettings).done(function(response){
-                var receivedData = $.parseJSON(response);
-                var voteSuccess = receivedData['success']
-                var voteValue = receivedData['data']['voteValue'];
-                if (voteSuccess == true) {
-                    $('#voteValue').text(voteValue);
-                }
-            });
-        }
-    }
-}
-
-function songSeek(){
-    if(!song.paused){
-        song.pause();
-        totalTime += song.currentTime - startTime;
-        var seekto = song.duration * (seekslider.value / 100);
-        song.currentTime = seekto;
-        song.play();
-        startTime = song.currentTime;
-    } else {
-        var seekto = song.duration * (seekslider.value / 100);
-        song.currentTime = seekto;
-    }
-}
-
-function seektimeupdate(){
-    var nt = song.currentTime * (100 / song.duration);
-    seekslider.value = nt;
-    var curmins = Math.floor(song.currentTime / 60);
-    var cursecs = Math.floor(song.currentTime - curmins * 60);
-    var durmins = Math.floor(song.duration / 60);
-    var dursecs = Math.floor(song.duration - durmins * 60);
-    if(cursecs < 10){ cursecs = "0"+cursecs; }
-    if(dursecs < 10){ dursecs = "0"+dursecs; }
-    if(curmins < 10){ curmins = "0"+curmins; }
-    if(durmins < 10){ durmins = "0"+durmins; }
-    curtimetext.innerHTML = curmins+":"+cursecs;
-    durtimetext.innerHTML = durmins+":"+dursecs;
-}
-
-function songMute(){
-    if(song.muted){
-        song.muted = false;
-        mutebtn.innerHTML = "Mute";
-    } else {
-        song.muted = true;
-        mutebtn.innerHTML = "Unmute";
-    }
-}
-
-function setvolume(){
-    song.volume = volumeslider.value / 100;
-}
-</script>
+<!-- checks if a song was played for at least 35% -->
+<script type="text/javascript" src="{SITE_URL}/templates/js/frontend/audioplayer.js"></script>
