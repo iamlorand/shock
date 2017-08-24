@@ -92,6 +92,15 @@ $userToken = (isset($_POST['userToken'])) ? $_POST['userToken'] : null;
  * From this point , the control is taken by the Action specific controller
  * call the Action specific file, but check first if exists 
  */
+
+if($registry->requestController != "sound")
+{
+	unset($registry->session->searchedFor);
+}elseif($registry->requestController == "sound" && $registry->requestAction != "list")
+{
+	unset($registry->session->searchedFor);
+}
+
 $actionControllerPath = CONTROLLERS_PATH . '/' . $registry->requestModule . '/' . $registry->requestControllerProcessed . 'Controller.php';
 if(file_exists($actionControllerPath))
 {

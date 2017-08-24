@@ -53,16 +53,30 @@ class Sound extends Dot_Model
         return $result;
     }
 
-    // public function searchSong() 
-    // { 
-    //     $select = $this->db->select()
-    //                         ->from('sound')
-    //                         ->where(
-    //     $result = $this->db->fetchRow($select);
-    //     return $result;
+    public function getMusicListBySearchWord($searchWord, $page = 1) 
+    { 
+        $select = $this->db->select()
+                            ->from('sound')
+                            ->where("title LIKE ?" ,'%'.$searchWord.'%');
+                      
+        $dotPaginator=new Dot_Paginator($select, $page, $this->settings->resultsPerPage);
+    
+        $result=$dotPaginator->getData();
+        return $result;
       
 
-    // }
+    }
+    //top 50 order by viewCount
+    public function top50(){
+        $select = $this->db->select()
+                            ->from('sound')
+                            ->order('viewCount DESC')
+                            ->limit(50);
+                      
+        $result = $this->db->fetchAll($select);
+        return $result;
+
+    }
 
     #gets all replys by id from table comment
     public function getReplyById($id)
