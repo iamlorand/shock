@@ -1,4 +1,4 @@
-var playbtn, seekslider, curtimetext, durtimetext, mutebtn, volumeslider, viewed = false, startTime = 0, totalTime = 0;
+var playbtn, seekslider, curtimetext, durtimetext, mutebtn, volumeslider, listened = 0, viewed = false, startTime = 0, totalTime = 0;
 
 var song = [];
 var playbtn = [];
@@ -25,28 +25,39 @@ function assignPlayerEvents(id) {
     song[id].addEventListener("timeupdate",seektimeupdate,false);
     mutebtn[id].addEventListener("click",songMute,false);
     volumeslider[id].addEventListener("change",setvolume,false);
-    
+
 }
 
+//stops and sends the listened time to analize
+window.onbeforeunload = function() {
+    $(document).ready(function(){
+            var status = ($(playbtn).text());
+            if(status == "Pause"){
+                playbtn.click();
+            }
+    });
+}
+var audioList;
 var songList = [];
 $(document).ready(function(){
-    var audioList = $("[songId]");
+    audioList = $("[songId]");
     var songList = [];
     $.each(audioList, function(){
         var currentSong = $(this);
         var songId = currentSong.attr('songId');
         assignPlayerEvents(songId);
         songList[songId] = $(this);
-    })
+    });
 });
 
+//plays or pauses the song
 function playPause(e){
     songId = $(e.target).attr('btnSongId');
-
     if (isNaN(songId)) {
         alert("!")
         return;
     }
+
     var song = document.getElementById("song"+songId);
     playbtn = document.getElementById("playpausebtn"+songId);
 
@@ -58,9 +69,8 @@ function playPause(e){
         song.pause();
         playbtn.innerHTML = "Play";
         totalTime += song.currentTime - startTime;
-        var listened = (totalTime / song.duration) * 100;
-        console.log(listened);
-        if((listened > 35) && (viewed == false)) {
+        listened = (totalTime / song.duration) * 100;
+        if((listened > 5) && (viewed == false)) {
             viewed = true;
             var requestSettings = {
                         'data' : {'viewed': viewed, 'soundId': songId},
@@ -74,10 +84,12 @@ function playPause(e){
                     $('#voteValue').text(voteValue);
                 }
             });
+            viewed = false;
         }
     }
 }
 
+//jumps to whereever is clicked on the songs seekslider
 function songSeek(e){
     songId = $(e.target).attr('btnSongId');
 
@@ -96,6 +108,7 @@ function songSeek(e){
     }
 }
 
+//updates the time when the music is playing
 function seektimeupdate(e){
     songId = $(e.target).attr('btnSongId');
 
@@ -116,9 +129,9 @@ function seektimeupdate(e){
     durtimetext.innerHTML = durmins+":"+dursecs;
 }
 
+//mutes the song
 function songMute(e){
     songId = $(e.target).attr('btnSongId');
-    console.log(songId)
     var song = document.getElementById("song"+songId);
     mutebtn = document.getElementById("mutebtn"+songId);
 
@@ -131,6 +144,7 @@ function songMute(e){
     }
 }
 
+//sets the volume by clicking the volume seekbar
 function setvolume(e){
     songId = $(e.target).attr('btnSongId');
 
