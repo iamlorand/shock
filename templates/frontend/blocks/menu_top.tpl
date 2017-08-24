@@ -11,6 +11,10 @@
 	</li>
 	<li class="{SEL_PAGE_LIST}">
 		<i class="glyphicon glyphicon-list-alt"></i>
+		<a href="{SITE_URL}/sound/top50/">Top 50</a> 
+	</li>
+	<li class="{SEL_PAGE_LIST}">
+		<i class="glyphicon glyphicon-list-alt"></i>
 		<a href="{SITE_URL}/sound/list/">List all songs</a> 
 	</li>
 	<li class="{SEL_PAGE_UPLOAD}">

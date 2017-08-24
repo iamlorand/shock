@@ -1,6 +1,7 @@
 <?php
 
 $session = Zend_Registry::get('session');
+$settings = Zend_Registry::get('settings');
 
 $soundView = new Sound_View($tpl);
 $soundModel = new Sound();
@@ -40,8 +41,22 @@ switch ($registry->requestAction)
 
      case 'list':
         $page=(isset($registry->request['page']) && $registry->request['page'] > 0 ) ? $registry->request['page'] : 1;
+
         $list=$soundModel->getMusicList($page);
+
+        if($_SERVER['REQUEST_METHOD'] == 'POST') 
+        {
+            $session->searchedFor = $_POST['search'];
+        }
+        
+        if(isset($session->searchedFor) && !empty($session->searchedFor))
+        {
+            $list=$soundModel->getMusicListBySearchWord($session->searchedFor, $page);
+        }
+
+        
         $soundView->showMusic('show_list',$list,$page);
+
         break;
 
     case 'show_song':
@@ -184,5 +199,10 @@ switch ($registry->requestAction)
             exit();
         }
         
+        break;
+    case 'top50':
+        $list= $soundModel->top50();
+        $soundView->top50('top50',$list);
+
         break;
 }

@@ -49,6 +49,26 @@ class Sound_View extends View
         }
     }
 
+    
+    //top 50 order by viewCount
+    public function top50($template='', $list){
+        if ($template != '') $this->template=$template;
+        $this->tpl->setFile('tpl_main','sound/'.$this->template.'.tpl');
+        $this->tpl->setBlock('tpl_main','list_music','list_music_block');
+        foreach ($list as $list => $music) {
+            foreach ($music as $key => $value) {
+                if ($key == 'thumbnail' && $value == '') {
+                    $this->tpl->setVar(strtoupper($key), '{SITE_URL}images/frontend/vinyl_default.jpg');
+                } else {
+                    $this->tpl->setVar(strtoupper($key),$value); 
+                }
+            }
+        $this->tpl->parse('list_music_block','list_music',true);
+       } 
+
+    }
+
+
     #confirm deleting a record(song) by id
     public function showDeleteConfirmation($template = '', $music)
     {

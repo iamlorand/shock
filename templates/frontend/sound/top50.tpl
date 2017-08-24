@@ -5,11 +5,7 @@ var SITE_URL = "{SITE_URL}";
 <!-- checks if a song was played for at least 35% -->
 <script type="text/javascript" src="{SITE_URL}/templates/js/frontend/audioplayer.js"></script>
     
-    <form action="" method="POST">
-        <label for="search-field">Search:</label> 
-        <input type="search" name="search" placeholder=" Search here ... " results="5" />
-        <input type="submit" value="Submit" />
-    </form> <br>
+    
 
 <div id="userList" class="box-shadow">
     <table class="table table-bordered">
@@ -87,5 +83,3 @@ var SITE_URL = "{SITE_URL}";
         </tbody>
     </table>
 </div>
-
-{PAGINATION}
