@@ -1,6 +1,11 @@
 <script>
 var SITE_URL = "{SITE_URL}";
 </script>
+<style type="text/css">
+    li.playlistElement {
+        list-style-type: none;
+    }
+</style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!-- checks if a song was played for at least 35% -->
 <script type="text/javascript" src="{SITE_URL}/templates/js/frontend/audioplayer.js"></script>
@@ -12,7 +17,7 @@ var SITE_URL = "{SITE_URL}";
     </form> <br>
 
 <div id="userList" class="box-shadow">
-    <table class="table table-bordered">
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th style="text-align: center; width: 20px;">#</th>
@@ -69,15 +74,19 @@ var SITE_URL = "{SITE_URL}";
                 <td>
                     <table  class="action_table">
                         <tr>
-                            <td width="25%">
-                                <button class="btn btn-default btn-sm">
-                                    <a href="{SITE_URL}/sound/update/id/{ID}" title="Edit/Update" class="edit_state">Edit</a>
+                            <td>
+                                <button>
+                                    <a href="{SITE_URL}/sound/update/id/{ID}" class="glyphicon glyphicon-pencil" title="Edit/Update"></a>
                                 </button>
                             </td>
-                            <td width="25%">
-                                <button class="btn btn-default btn-sm">
-                                    <a href="{SITE_URL}/sound/delete/id/{ID}" title="Delete" class="delete_state">Delete</a>
+                            <td>
+                                <button id="{ID}" class="glyphicon glyphicon-pushpin" title="Add to playlist" onclick="addToPlaylist(this)">
                                 </button>
+                                <ul id="playlistList">
+                                    <!-- BEGIN playlist -->
+                                        <li id="{PLAYLIST_ID}" songId="{ID}" class="playlistElement" style="display: none;">{PLAYLIST_PLAYLISTNAME}</li>
+                                    <!-- END playlist -->
+                                </ul>
                             </td>
                         </tr>
                     </table>
@@ -89,3 +98,28 @@ var SITE_URL = "{SITE_URL}";
 </div>
 
 {PAGINATION}
+
+<script type="text/javascript">
+    var siteurl = "{SITE_URL}";
+
+    function addToPlaylist(elem){
+        var soundId = $(elem).attr('id');
+        $('li[songId='+soundId+']').show();
+        $('li[songId='+soundId+']').click(function(){
+            var playlistId = $(this).attr('id');
+            $.ajax({
+                url : siteurl+"/sound/addtoplaylist",
+                type : "POST",
+                dataType: "Json",
+                data : {playlistId: playlistId, soundId: soundId},
+                success : function(response){
+                    if(response['success'] == true){
+                        $('li[songId='+soundId+']').hide();
+                    } else {
+                        alert(response['message']);
+                    }
+                }
+            });
+        });
+    }
+</script>

@@ -17,6 +17,10 @@
 		<i class="glyphicon glyphicon-list-alt"></i>
 		<a href="{SITE_URL}/sound/list/">List all songs</a> 
 	</li>
+	<li class="{SEL_PAGE_LIST}">
+		<i class="glyphicon glyphicon-list-alt"></i>
+		<a href="{SITE_URL}/sound/allplaylist/">My playlists</a> 
+	</li>
 	<li class="{SEL_PAGE_UPLOAD}">
 		<i class="glyphicon glyphicon-upload"></i>
 		<a href="{SITE_URL}/sound/upload/">Upload</a> 

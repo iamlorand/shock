@@ -11,19 +11,59 @@ class Sound_View extends View
     #use this function to upload a file
     public function upload($template = '')
     {
-        if (!empty($template))
+        if ($template != '')
         {
             $this->template = $template;
             $this->tpl->setFile('tpl_main', 'sound/' . $this->template . '.tpl');
         }  
     }
-    public function showMusic($template='', $list, $page = 1)
+    #use this function to create a new playlist
+    public function createPlaylist($template = '')
+    {
+        if ($template != '')
+        {
+            $this->template = $template;
+            $this->tpl->setFile('tpl_main', 'sound/' . $this->template . '.tpl');
+        }  
+    }
+    #displays all playlists of the logged user
+    public function allMyPlaylists($template='', $list)
+    {
+        if ($template != '') $this->template=$template;
+        $this->tpl->setFile('tpl_main','sound/'.$this->template.'.tpl');
+        $this->tpl->setBlock('tpl_main','playlist_list','playlist_list_block');
+
+        foreach ($list as $data) {
+            foreach ($data as $key => $value) {
+                $this->tpl->setVar('PLAYLIST_' . strtoupper($key),$value); 
+            }
+            $this->tpl->parse('playlist_list_block','playlist_list',true);
+        }
+    }
+    #displays your requested playlist
+    public function myPlaylist($template='', $list)
+    {
+        if ($template != '') $this->template=$template;
+        $this->tpl->setFile('tpl_main','sound/'.$this->template.'.tpl');
+        $this->tpl->setBlock('tpl_main','playlist','playlist_block');
+
+        foreach ($list as $music) {
+            foreach ($music as $key => $value) {
+                $this->tpl->setVar(strtoupper($key),$value); 
+            }
+            $this->tpl->parse('playlist_block','playlist',true);
+        }
+    }
+
+    public function showMusic($template='', $list, $page = 1, $playlistList = '')
     {
         if ($template != '') $this->template=$template;
         $this->tpl->setFile('tpl_main','sound/'.$this->template.'.tpl');
         $this->tpl->setBlock('tpl_main','list_music','list_music_block');
+        $this->tpl->setBlock('list_music','playlist','playlist_block');
         $this->tpl->paginator($list['pages']);
         $this->tpl->setVar('PAGE',$page);
+
         foreach ($list['data'] as $list => $music) {
             foreach ($music as $key => $value) {
                 if ($key == 'thumbnail' && $value == '') {
@@ -32,8 +72,17 @@ class Sound_View extends View
                     $this->tpl->setVar(strtoupper($key),$value); 
                 }
             }
-        $this->tpl->parse('list_music_block','list_music',true);
-       } 
+            if ($playlistList != '') {
+                $this->tpl->parse('playlist_block','');
+                foreach ($playlistList as $play) {
+                    foreach ($play as $playlistKey => $playlistValue) {
+                        $this->tpl->setVar('PLAYLIST_' . strtoupper($playlistKey),$playlistValue);
+                    }
+                    $this->tpl->parse('playlist_block','playlist',true);
+                }
+            }
+            $this->tpl->parse('list_music_block','list_music',true);
+        }
     }
 
     #with this function you can edit an record(song) by id
@@ -51,10 +100,11 @@ class Sound_View extends View
 
     
     //top 50 order by viewCount
-    public function top50($template='', $list){
+    public function top50($template='', $list, $playlistList = ''){
         if ($template != '') $this->template=$template;
         $this->tpl->setFile('tpl_main','sound/'.$this->template.'.tpl');
         $this->tpl->setBlock('tpl_main','list_music','list_music_block');
+        $this->tpl->setBlock('list_music','playlist','playlist_block');
         foreach ($list as $list => $music) {
             foreach ($music as $key => $value) {
                 if ($key == 'thumbnail' && $value == '') {
@@ -63,8 +113,17 @@ class Sound_View extends View
                     $this->tpl->setVar(strtoupper($key),$value); 
                 }
             }
-        $this->tpl->parse('list_music_block','list_music',true);
-       } 
+            if ($playlistList != '') {
+                $this->tpl->parse('playlist_block','');
+                foreach ($playlistList as $play) {
+                    foreach ($play as $playlistKey => $playlistValue) {
+                        $this->tpl->setVar('PLAYLIST_' . strtoupper($playlistKey),$playlistValue);
+                    }
+                    $this->tpl->parse('playlist_block','playlist',true);
+                }
+            }
+            $this->tpl->parse('list_music_block','list_music',true);
+        } 
 
     }
 
