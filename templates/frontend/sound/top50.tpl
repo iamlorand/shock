@@ -8,7 +8,7 @@ var SITE_URL = "{SITE_URL}";
     
 
 <div id="userList" class="box-shadow">
-    <table class="table table-bordered">
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th style="text-align: center; width: 20px;">#</th>

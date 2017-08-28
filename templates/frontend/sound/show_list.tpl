@@ -10,11 +10,20 @@ var SITE_URL = "{SITE_URL}";
 <!-- checks if a song was played for at least 35% -->
 <script type="text/javascript" src="{SITE_URL}/templates/js/frontend/audioplayer.js"></script>
     
-    <form action="" method="POST">
+    <form action="" method="POST" style="float: left;">
         <label for="search-field">Search:</label> 
         <input type="search" name="search" placeholder=" Search here ... " results="5" />
         <input type="submit" value="Submit" />
     </form> <br>
+    <form action="" method="GET" style="float: right;">
+        <select name="genre" onchange="this.form.submit()">
+            <option value="">All</option>
+            <option value="Rock">Rock</option>
+            <option value="Jazz">Jazz</option>
+            <option value="Pop">Pop</option>
+            <option value="Manea">Manea</option>
+        </select>
+    </form>
 
 <div id="userList" class="box-shadow">
     <table class="table table-striped">

@@ -46,7 +46,9 @@ switch ($registry->requestAction)
         {
             $session->searchedFor = $_POST['search'];
         }
-        
+        if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['genre'])) {
+            $queryTag = strtolower(strip_tags($_GET['genre']));
+        }
         if(isset($session->searchedFor) && !empty($session->searchedFor))
         {
             $list=$soundModel->getMusicListBySearchWord($session->searchedFor, $page);
