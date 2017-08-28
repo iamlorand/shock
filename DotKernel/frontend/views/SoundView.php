@@ -61,10 +61,18 @@ class Sound_View extends View
         $this->tpl->setFile('tpl_main','sound/'.$this->template.'.tpl');
         $this->tpl->setBlock('tpl_main','list_music','list_music_block');
         $this->tpl->setBlock('list_music','playlist','playlist_block');
+        $this->tpl->setBlock('list_music','action_button_logged','action_button_logged_block');
         $this->tpl->paginator($list['pages']);
         $this->tpl->setVar('PAGE',$page);
 
         foreach ($list['data'] as $list => $music) {
+            //parsing the buttons on the replys for the logged users 
+            if (isset($this->session->user->id)) {
+                $this->tpl->parse('action_button_logged_block', '');
+                if ($music['userId'] == $this->session->user->id) {
+                   $this->tpl->parse('action_button_logged_block', 'action_button_logged', TRUE); 
+                }
+            }
             foreach ($music as $key => $value) {
                 if ($key == 'thumbnail' && $value == '') {
                     $this->tpl->setVar(strtoupper($key), '{SITE_URL}images/frontend/vinyl_default.jpg');
