@@ -26,6 +26,20 @@
                     <show>Show song details</show>
                 </action>
             </pageTitle>
+             <validate>
+                <title>
+                    <lengthMin>3</lengthMin>
+                    <lengthMax>255</lengthMax>
+                </title>
+                <description>
+                    <lengthMin>3</lengthMin>
+                    <lengthMax>20</lengthMax>
+                </description>
+                <tags>
+                    <lengthMin>3</lengthMin>
+                    <lengthMax>150</lengthMax>
+                </tags>
+            </validate> 
         </variable>
         <variable option="mobile">
             <pageTitle>
@@ -33,11 +47,6 @@
                     <home>Mobile Version</home>
                 </action>
             </pageTitle>
-            <validate>
-                <details>
-                    <lengthMin>3</lengthMin>
-                </details>
-            </validate> 
             <contactForm>
                 <subject>Mobile Contact Form</subject>
                 <message>
