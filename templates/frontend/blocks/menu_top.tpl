@@ -10,7 +10,7 @@
 		<a href="{SITE_URL}">Home</a>
 	</li>
 	<li class="{SEL_PAGE_LIST}">
-		<i class="glyphicon glyphicon-list-alt"></i>
+		<i class="	glyphicon glyphicon-thumbs-up"></i>
 		<a href="{SITE_URL}/sound/top50/">Top 50</a> 
 	</li>
 	<li class="{SEL_PAGE_LIST}">
