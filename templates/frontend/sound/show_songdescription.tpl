@@ -1,3 +1,11 @@
+<!-- include jQuery library -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
+
+
+<!-- include JustWave Player css and js files -->
+<link type="text/css" rel="stylesheet" href="{SITE_URL}/justwave/justwave.player.css">
+<script src="{SITE_URL}/justwave/justwave.player-min.js"></script>
+
 <style type="text/css">
     textarea{ width: 100%; padding: 5px; margin: 2px; }
     .songDescription{ margin: auto; }
@@ -10,7 +18,7 @@
     input#seekslider{ width:180px; float: left; }
     input#volumeslider{ width: 80px; float: right; }
 </style>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
 <script>
 var SITE_URL = "{SITE_URL}";
 </script>
@@ -21,8 +29,19 @@ $(document).ready(function(){
         $(this).prevAll('.content').contents().unwrap().wrap('<form method="POST" action=""><textarea name="text"/><button name="id" value="'+editid+'" type="submit">Save</button></form>');
         $(this).hide();
     });
+
+    // $.justwave({ showname: 0, buttoncolor: '#337AB7'});
 });
+
+      
+
 </script>
+<link rel="stylesheet" type="text/css" href="{SITE_URL}/templates/js/frontend/audioplayer.js">
+<!-- <script type="text/javascript">
+    $(document).ready( function() {
+      $.justwave({ showname: 0, buttoncolor: '#337AB7', ajax:'{SITE_URL}/sound/justwave'});
+    });
+</script> -->
 <script type="text/javascript">
     var siteurl = "{SITE_URL}";
 
@@ -48,6 +67,7 @@ $(document).ready(function(){
         });
     }
 </script>
+
 <script>
 
 function reply(id)
@@ -56,6 +76,8 @@ function reply(id)
 }
 
 </script>
+
+     
 
 
 <div class="panel panel-success" style="width: 45%; float: left;">
@@ -67,6 +89,10 @@ function reply(id)
       <audio id="song{SONG_ID}" songId="{SONG_ID}" btnSongId="{SONG_ID}" width="550" height="300">
         <source src="{SITE_URL}/{SONG_FILENAME}" type="audio/mpeg">
       </audio>
+
+        <!-- <audio  data-wave_color="#3232C8" data-prog_color="#3232C8" data-back_color="#C0C0C0" width="700" height="90" data-showtimes="0" data-showname="0" data-buttoncolor="#337AB7">
+            <source src="{SITE_URL}/{SONG_FILENAME}" type="audio/mpeg">
+        </audio> -->
       <div id="audio_controls_bar">
         <button id="playpausebtn{SONG_ID}"   btnSongId="{SONG_ID}">Play</button>
         <input id="seekslider{SONG_ID}"      btnSongId="{SONG_ID}" type="range" min="0" max="100" value="0" step="1">
@@ -164,5 +190,3 @@ function reply(id)
 
 </div>
 
-<!-- checks if a song was played for at least 35% -->
-<script type="text/javascript" src="{SITE_URL}/templates/js/frontend/audioplayer.js"></script>
