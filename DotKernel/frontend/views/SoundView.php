@@ -184,6 +184,8 @@ class Sound_View extends View
             foreach ($music as $key => $value) {
                 if ($key == 'thumbnail' && $value == '') {
                     $this->tpl->setVar('SONG_'.strtoupper($key), '{SITE_URL}images/frontend/vinyl_default.jpg'); 
+                } elseif ($key == 'tags' && $value != '') {
+                    $this->tpl->setVar('SONG_'.strtoupper($key), '#' . $value);
                 } else {
                     $this->tpl->setVar('SONG_'.strtoupper($key),$value);
                 }
