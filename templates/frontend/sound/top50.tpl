@@ -8,7 +8,7 @@ var SITE_URL = "{SITE_URL}";
     
 
 <div id="userList" class="box-shadow">
-    <table class="table table-bordered">
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th style="text-align: center; width: 20px;">#</th>
@@ -65,15 +65,19 @@ var SITE_URL = "{SITE_URL}";
                 <td>
                     <table  class="action_table">
                         <tr>
-                            <td width="25%">
-                                <button class="btn btn-default btn-sm">
-                                    <a href="{SITE_URL}/sound/update/id/{ID}" title="Edit/Update" class="edit_state">Edit</a>
+                            <td>
+                                <button>
+                                    <a href="{SITE_URL}/sound/update/id/{ID}" class="glyphicon glyphicon-pencil" title="Edit/Update"></a>
                                 </button>
                             </td>
-                            <td width="25%">
-                                <button class="btn btn-default btn-sm">
-                                    <a href="{SITE_URL}/sound/delete/id/{ID}" title="Delete" class="delete_state">Delete</a>
+                            <td>
+                                <button id="{ID}" class="glyphicon glyphicon-pushpin" title="Add to playlist" onclick="addToPlaylist(this)">
                                 </button>
+                                <ul id="playlistList">
+                                    <!-- BEGIN playlist -->
+                                        <li id="{PLAYLIST_ID}" songId="{ID}" class="playlistElement" style="display: none;">{PLAYLIST_PLAYLISTNAME}</li>
+                                    <!-- END playlist -->
+                                </ul>
                             </td>
                         </tr>
                     </table>
@@ -83,3 +87,28 @@ var SITE_URL = "{SITE_URL}";
         </tbody>
     </table>
 </div>
+
+<script type="text/javascript">
+    var siteurl = "{SITE_URL}";
+
+    function addToPlaylist(elem){
+        var soundId = $(elem).attr('id');
+        $('li[songId='+soundId+']').show();
+        $('li[songId='+soundId+']').click(function(){
+            var playlistId = $(this).attr('id');
+            $.ajax({
+                url : siteurl+"/sound/addtoplaylist",
+                type : "POST",
+                dataType: "Json",
+                data : {playlistId: playlistId, soundId: soundId},
+                success : function(response){
+                    if(response['success'] == true){
+                        $('li[songId='+soundId+']').parent().hide();
+                    } else {
+                        alert(response['message']);
+                    }
+                }
+            });
+        });
+    }
+</script>

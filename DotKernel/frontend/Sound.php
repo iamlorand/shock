@@ -66,6 +66,18 @@ class Sound extends Dot_Model
       
 
     }
+    #returns search results filtered by a tag
+    public function getMusicListByTag($tag, $page = 1) 
+    { 
+        $select = $this->db->select()
+                            ->from('sound')
+                            ->where("tags LIKE ?" , $tag);
+                      
+        $dotPaginator=new Dot_Paginator($select, $page, $this->settings->resultsPerPage);
+    
+        $result=$dotPaginator->getData();
+        return $result;
+    }
     //top 50 order by viewCount
     public function top50(){
         $select = $this->db->select()
@@ -158,5 +170,49 @@ class Sound extends Dot_Model
     public function updateViewCount($data, $id)
     {
         $update = $this->db->update('sound', $data, 'id = ' . $id);
+    }
+    #returns a playlist from table playlist by playlist(id)
+    public function getPlaylistById($id)
+    {
+        $select = $this->db->select()
+                            ->from('playlistSong')
+                            ->where('playlist=?', $id)
+                            ->joinLeft('sound', 'playlistSong.soundId = sound.id', ['filename' => 'filename',
+                                                                                    'title' => 'title',
+                                                                                    'description' => 'description']);
+        $result = $this->db->fetchAll($select);
+        return $result;
+    }
+    #creates a new playlist
+    public function createPlaylist($data)
+    {
+        $insert = $this->db->insert('playlist', $data);
+    }
+    #returns all the playlists of the logged user
+    public function playlistlist($userid)
+    {
+        $select = $this->db->select()
+                            ->from('playlist')
+                            ->where('userId=?', $userid);
+        $result = $this->db->fetchAll($select);
+        return $result;
+    }
+    #deletes playlist by id
+    public function deletePlaylist($id)
+    {
+        $deletePlaylist = $this->db->delete('playlist', 'id = ' . $id);
+        $deletePlaylistSong = $this->db->delete('playlistSong', 'playlist = ' . $id);
+    }
+    #adds a song into the table playlistSong
+    public function addSongToPlaylistById($data)
+    {
+        $insert = $this->db->insert('playlistSong', $data);
+    }
+    #deletes playlist by id
+    public function deleteFromPlaylist($songId, $playlistId)
+    {
+        $deletePlaylist = $this->db->delete('playlistSong', ['id = ' . $songId,
+                                                            'playlist = ' . $playlistId
+                                                            ]);
     }
 }

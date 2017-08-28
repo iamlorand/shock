@@ -36,21 +36,21 @@ switch ($registry->requestAction)
                 }
             }
 
-        //POST values that will be validated
-        $values = [
-            'title'=> [
-                'title' => str_replace(" ", "", strip_tags($_POST['title'])) ?? '',
-            ],
-            'description'=> [
-                'description'=> str_replace(" ", "", strip_tags($_POST['description'])) ?? '',
-            ],
-            'tags'=> [
-                'tags'=> str_replace(" ", "", strip_tags($_POST['tags'])) ?? ''
-            ]
-        ];
+            //POST values that will be validated
+            $values = [
+                'title'=> [
+                    'title' => str_replace(" ", "", strip_tags($_POST['title'])) ?? '',
+                ],
+                'description'=> [
+                    'description'=> str_replace(" ", "", strip_tags($_POST['description'])) ?? '',
+                ],
+                'tags'=> [
+                    'tags'=> str_replace(" ", "", strip_tags($_POST['tags'])) ?? ''
+                ]
+            ];
 
 
-        $dotValidateSong = new Dot_Validate_Sound(array('who' => 'user', 'action' => 'add', 'values' => $values));
+            $dotValidateSong = new Dot_Validate_Sound(array('who' => 'user', 'action' => 'add', 'values' => $values));
 
             if($dotValidateSong->isValid() && empty($countError)  && empty($countError1))
             {
@@ -81,28 +81,37 @@ switch ($registry->requestAction)
                  header('Location:'.$registry->configuration->website->params->url .'/' . $registry->requestController);
                   exit;
             }
-            }
+        }
         
         break;
 
 
      case 'list':
         $page=(isset($registry->request['page']) && $registry->request['page'] > 0 ) ? $registry->request['page'] : 1;
-
-        $list=$soundModel->getMusicList($page);
-
+        $list = $soundModel->getMusicList($page);
         if($_SERVER['REQUEST_METHOD'] == 'POST') 
         {
             $session->searchedFor = $_POST['search'];
         }
-        
-        if(isset($session->searchedFor) && !empty($session->searchedFor))
-        {
-            $list=$soundModel->getMusicListBySearchWord($session->searchedFor, $page);
+        if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['genre'])) {
+            $queryTag = strtolower(strip_tags($_GET['genre']));
+            $musicListByTag = $soundModel->getMusicListByTag($queryTag);
+            $soundView->showMusic('show_list', $musicListByTag, $page);
+        } else {
+            if(isset($session->searchedFor) && !empty($session->searchedFor))
+            {
+                $list=$soundModel->getMusicListBySearchWord($session->searchedFor, $page);
+            }
+            if(isset($session->user->id)) {
+                $userId = $session->user->id;
+                $playlistList = $soundModel->playlistlist($userId);
+                $soundView->showMusic('show_list',$list,$page, $playlistList);
+            } else {
+                $soundView->showMusic('show_list',$list,$page);
+            }
         }
 
         
-        $soundView->showMusic('show_list',$list,$page);
 
         break;
 
@@ -154,30 +163,6 @@ switch ($registry->requestAction)
             $soundView->showSongById('show_songdescription', $song, $comments, $checkRating, $ratingCount);
         }
 
-        break;
-
-    case 'delete':
-        if ((isset($registry->request['id'])) && (($registry->request['id']) > 0)) {
-            $id = $registry->request['id'];
-            $song = $soundModel->getSongById($id);
-            $soundView->showDeleteConfirmation('delete_song', $song);
-            if ($_SERVER['REQUEST_METHOD'] == 'POST')
-            {
-                if ('on' == $_POST['confirm'])
-                {
-                    $soundModel->deleteSong($id);
-                    $registry->session->message['txt'] = $option->infoMessage->songDelete;
-                    $registry->session->message['type'] = 'info';
-                }
-                else
-                {
-                    $registry->session->message['txt'] = $option->infoMessage->noSongDelete;
-                    $registry->session->message['type'] = 'info';
-                }
-                header('Location:'.$registry->configuration->website->params->url .'/' . $registry->requestController .'/list/');
-                exit;
-            }
-        }
         break;
 
     case 'update':
@@ -247,12 +232,147 @@ switch ($registry->requestAction)
         }
         
         break;
+
     case 'top50':
-        $list= $soundModel->top50();
-        $soundView->top50('top50',$list);
+        if (isset($session->user->id)) {
+            $userId = $session->user->id;
+            $playlistList = $soundModel->playlistlist($userId);
+            $list= $soundModel->top50();
+            $soundView->top50('top50', $list, $playlistList);
+        } else {
+            $list= $soundModel->top50();
+            $soundView->top50('top50',$list);
+        }
 
         break;
+        case 'allplaylist':
+        if (isset($session->user->id)) {
+            $userId = $session->user->id;
+            $playlistList = $soundModel->playlistlist($userId);
+            $soundView->allMyPlaylists('allplaylist', $playlistList);
+        } else {
+            header('Location:' . $registry->configuration->website->params->url . '/user/login');
+            exit;
+        }
+        break;
+
+    case 'myplaylist':
+        $id = $registry->request['id'];
+        $requestedPlaylist = $soundModel->getPlaylistById($id);
+        $soundView->myPlaylist('myplaylist', $requestedPlaylist);
+        break;
+
+    case 'createplaylist':
+        $createPlaylist = $soundView->createPlaylist('createplaylist');
+        if (isset($session->user->id)) {
+            if ($_SERVER['REQUEST_METHOD'] == 'POST')
+            {
+                $insertArray = [];
+                $insertArray['userId'] = $session->user->id;
+                foreach ($_POST as $key => $value) {
+                    $insertArray[$key] = strip_tags($value);
+                }
+                if ($soundModel->createPlaylist($insertArray)) {
+                    header('Location:' . $registry->configuration->website->params->url . $registry->requestController . '/allplaylist');
+                    exit;
+                } else {
+                    header('Location:'.$registry->configuration->website->params->url .'/' . $registry->requestController . '/allplaylist');
+                    exit;
+                }
+            }
+        } else {
+            header('Location:' . $registry->configuration->website->params->url . '/user/login');
+            exit;
+        }
+        break;
+
+    case 'addtoplaylist':
+        if (isset($session->user->id)) {
+            $userId = $session->user->id;
+            if ((isset($_POST['playlistId'])) && (($_POST['soundId']) > 0)
+                && (isset($_POST['soundId'])) && (($_POST['playlistId']) > 0)) {
+
+                $insertArray = [];
+                if (is_numeric($_POST['soundId']) && is_numeric($_POST['playlistId'])) {
+                    $insertArray['soundId'] = $_POST['soundId'];
+                    $insertArray['playlist'] = $_POST['playlistId'];
+                    $insertArray['userId'] = $userId;
+
+                    $soundModel->addSongToPlaylistById($insertArray);
+                    
+                    $response = [
+                            'success' => true,
+                            'message' => 'Added successfully!'
+                            ];
+                } else {
+                    $response = [
+                            'success' => false,
+                            'message' => 'Something went wrong successfully!'
+                            ];
+                }
+
+                echo Zend_Json::encode($response);
+                exit;
+            }
+        } else {
+            header('Location:' . $registry->configuration->website->params->url . '/user/login');
+            exit;
+        }
+        break;
+
+    case 'deleteplaylist':
+        if (isset($session->user->id)) {
+            if ((isset($registry->request['id'])) && (($registry->request['id']) > 0)) {
+                $id = $registry->request['id'];
+                $userId = $session->user->id;
+
+                if ($soundModel->deletePlaylist($id)) {
+                    header('Location:' . $registry->configuration->website->params->url .'/' . $registry->requestController . '/allplaylist');
+                    exit;  
+                } else {
+                    header('Location:' . $registry->configuration->website->params->url .'/' . $registry->requestController . '/allplaylist');
+                    exit;
+                }
+            }
+        } else {
+            header('Location:' . $registry->configuration->website->params->url . '/user/login');
+            exit;
+        }
+        break;
+
+    case 'deletefromplaylist':
+        if (isset($session->user->id)) {
+            if ((isset($_POST['playlistId'])) && (($_POST['soundId']) > 0)
+                && (isset($_POST['soundId'])) && (($_POST['playlistId']) > 0)) {
+
+                $songId = $_POST['soundId'];
+                $playlistId = $_POST['playlistId'];
+
+                $response = [
+                            'success' => true,
+                            'message' => 'Deleted successfully!'
+                            ];
+
+                $soundModel->deleteFromPlaylist($songId, $playlistId);
+
+                echo Zend_Json::encode($response);
+                exit;
+            } else {
+                $response = [
+                            'success' => false,
+                            'message' => 'Invalid soundId or playlistId parameter!'
+                            ];
+
+                echo Zend_Json::encode($response);
+                exit;
+            }
+        } else {
+            header('Location:' . $registry->configuration->website->params->url . '/user/login');
+            exit;
+        }
+        break;
 }
+
 function validateImg($type, $data)
 {
     $errors = [];
@@ -310,4 +430,3 @@ function validateSong($type, $data)
         return $errors;
     }
 }
-
