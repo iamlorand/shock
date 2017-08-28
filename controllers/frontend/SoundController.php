@@ -48,17 +48,20 @@ switch ($registry->requestAction)
         }
         if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['genre'])) {
             $queryTag = strtolower(strip_tags($_GET['genre']));
-        }
-        if(isset($session->searchedFor) && !empty($session->searchedFor))
-        {
-            $list=$soundModel->getMusicListBySearchWord($session->searchedFor, $page);
-        }
-        if(isset($session->user->id)) {
-            $userId = $session->user->id;
-            $playlistList = $soundModel->playlistlist($userId);
-            $soundView->showMusic('show_list',$list,$page, $playlistList);
+            $musicListByTag = $soundModel->getMusicListByTag($queryTag);
+            $soundView->showMusic('show_list', $musicListByTag, $page);
         } else {
-            $soundView->showMusic('show_list',$list,$page);
+            if(isset($session->searchedFor) && !empty($session->searchedFor))
+            {
+                $list=$soundModel->getMusicListBySearchWord($session->searchedFor, $page);
+            }
+            if(isset($session->user->id)) {
+                $userId = $session->user->id;
+                $playlistList = $soundModel->playlistlist($userId);
+                $soundView->showMusic('show_list',$list,$page, $playlistList);
+            } else {
+                $soundView->showMusic('show_list',$list,$page);
+            }
         }
 
         

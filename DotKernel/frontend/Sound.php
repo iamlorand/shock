@@ -66,6 +66,18 @@ class Sound extends Dot_Model
       
 
     }
+    #returns search results filtered by a tag
+    public function getMusicListByTag($tag, $page = 1) 
+    { 
+        $select = $this->db->select()
+                            ->from('sound')
+                            ->where("tags LIKE ?" , $tag);
+                      
+        $dotPaginator=new Dot_Paginator($select, $page, $this->settings->resultsPerPage);
+    
+        $result=$dotPaginator->getData();
+        return $result;
+    }
     //top 50 order by viewCount
     public function top50(){
         $select = $this->db->select()

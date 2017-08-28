@@ -83,11 +83,13 @@ var SITE_URL = "{SITE_URL}";
                 <td>
                     <table  class="action_table">
                         <tr>
+                            <!-- BEGIN action_button_logged -->
                             <td>
-                                <button>
-                                    <a href="{SITE_URL}/sound/update/id/{ID}" class="glyphicon glyphicon-pencil" title="Edit/Update"></a>
+                                <button class="glyphicon glyphicon-pencil">
+                                    <a href="{SITE_URL}/sound/update/id/{ID}" title="Edit/Update"></a>
                                 </button>
                             </td>
+                            <!-- END action_button_logged -->
                             <td>
                                 <button id="{ID}" class="glyphicon glyphicon-pushpin" title="Add to playlist" onclick="addToPlaylist(this)">
                                 </button>
