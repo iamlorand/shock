@@ -54,6 +54,22 @@ class Sound_View extends View
             $this->tpl->parse('playlist_block','playlist',true);
         }
     }
+    #use this function to display genres
+    public function displayGenres($template = '', $genreList)
+    {
+        if ($template != '')
+        {
+            $this->template = $template;
+            $this->tpl->setFile('tpl_main', 'sound/' . $this->template . '.tpl');
+            $this->tpl->setBlock('tpl_main','genre_list','genre_list_block');
+            foreach ($genreList as $genre) {
+                foreach ($genre as $key => $value) {
+                    $this->tpl->setVar(strtoupper($key),$value); 
+                }
+                $this->tpl->parse('genre_list_block','genre_list',true);
+            }
+        }  
+    }
 
     public function showMusic($template='', $list, $page = 1, $playlistList = '')
     {

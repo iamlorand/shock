@@ -17,11 +17,11 @@ var SITE_URL = "{SITE_URL}";
     </form> <br>
     <form action="" method="GET" style="float: right;">
         <select name="genre" onchange="this.form.submit()">
-            <option value="">All</option>
-            <option value="Rock">Rock</option>
-            <option value="Jazz">Jazz</option>
-            <option value="Pop">Pop</option>
-            <option value="Manea">Manea</option>
+            <option value="">Select a genre</option>
+            <option value="all">All</option>
+            <!-- BEGIN genre_list -->
+            <option value="{GENRE}">{GENRE}</option>
+            <!-- END genre_list -->
         </select>
     </form>
 
@@ -85,9 +85,9 @@ var SITE_URL = "{SITE_URL}";
                         <tr>
                             <!-- BEGIN action_button_logged -->
                             <td>
-                                <button class="glyphicon glyphicon-pencil">
-                                    <a href="{SITE_URL}/sound/update/id/{ID}" title="Edit/Update"></a>
-                                </button>
+                                <a href="{SITE_URL}/sound/update/id/{ID}" title="Edit/Update">
+                                    <button class="glyphicon glyphicon-pencil"></button>
+                                </a>
                             </td>
                             <!-- END action_button_logged -->
                             <td>
