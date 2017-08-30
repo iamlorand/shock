@@ -1,5 +1,6 @@
 <?php
 
+
 $session = Zend_Registry::get('session');
 $settings = Zend_Registry::get('settings');
 
@@ -82,21 +83,28 @@ switch ($registry->requestAction)
                   exit;
             }
         }
-        
         break;
 
 
      case 'list':
         $page=(isset($registry->request['page']) && $registry->request['page'] > 0 ) ? $registry->request['page'] : 1;
         $list = $soundModel->getMusicList($page);
+        $genreList = $soundModel->getGenreList();
+        $soundView->displayGenres('show_list', $genreList);
+
         if($_SERVER['REQUEST_METHOD'] == 'POST') 
         {
             $session->searchedFor = $_POST['search'];
         }
         if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['genre'])) {
             $queryTag = strtolower(strip_tags($_GET['genre']));
-            $musicListByTag = $soundModel->getMusicListByTag($queryTag);
-            $soundView->showMusic('show_list', $musicListByTag, $page);
+            if ($_GET['genre'] != 'all') {
+                $musicListByTag = $soundModel->getMusicListByTag($queryTag);
+                $soundView->showMusic('show_list', $musicListByTag, $page);
+            } else {
+                $soundView->showMusic('show_list', $list, $page);
+            }
+            
         } else {
             if(isset($session->searchedFor) && !empty($session->searchedFor))
             {
@@ -162,6 +170,8 @@ switch ($registry->requestAction)
             $comments = $soundModel->getReplysAndCommentsById($id);
             $soundView->showSongById('show_songdescription', $song, $comments, $checkRating, $ratingCount);
         }
+
+
 
         break;
 
@@ -371,6 +381,32 @@ switch ($registry->requestAction)
             exit;
         }
         break;
+
+    // case 'justwave':
+    //     require_once 'justwave/JustWave.class.php';
+    //     $justwave = new JustWave();
+    //     // create waveform image(s)
+    //     $justwave->create('asd.mp3');
+    //     var_dump($justwave->create('asd.mp3'));
+    //     echo"<pre/>"; var_dump($justwave);exit;
+    //     if($justwave->status == 'ok') {
+    //       echo 'Duration of my_song.mp3 = ' . $justwave->duration . '<br>';
+    //       echo 'See waveform image under the link: <a href="' . $justwave->dataUrlWave . '">waveform</a>';
+    //     }
+    //     else
+    //       echo 'Failed! Message = ' . $justwave->message;
+    //     // if(isset($_POST['audio'])) {
+    //     //     // make class instance with default to POST parameters
+    //     //     $justwave = new JustWave();
+    //     //     // create waveform image(s)
+    //     //     $justwave->create($_POST['audio']);
+    //     //     // return as JSON data
+    //     //     die($justwave->json());
+    //     // }
+
+    //     // die(json_encode(array('status' => 'err', 'message' => 'No source audio parameter')));
+
+    //     break;
 }
 
 function validateImg($type, $data)

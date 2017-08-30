@@ -215,4 +215,12 @@ class Sound extends Dot_Model
                                                             'playlist = ' . $playlistId
                                                             ]);
     }
+    #returns all genre from table genre
+    public function getGenreList()
+    {
+        $select = $this->db->select()
+                            ->from('genre');
+        $result = $this->db->fetchAll($select);
+        return $result;
+    }
 }
