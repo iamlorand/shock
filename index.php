@@ -36,6 +36,7 @@ define('CONFIGURATION_PATH', APPLICATION_PATH . '/configs');
 define('CONTROLLERS_PATH', APPLICATION_PATH . '/controllers');
 define('DOTKERNEL_PATH', APPLICATION_PATH . '/DotKernel');
 define('TEMPLATES_PATH', APPLICATION_PATH . '/templates');
+define('UPLOADS_PATH', APPLICATION_PATH . '/uploads');
 
 // Define DIRECTORIES  ( relative paths)
 define('TEMPLATES_DIR', '/templates');

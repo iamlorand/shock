@@ -26,6 +26,18 @@
                     <show>Show song details</show>
                 </action>
             </pageTitle>
+             <infoMessage>
+                <songAdd>Song added ! </songAdd>
+                <songUpdate>Song updated ! </songUpdate>
+                <songDelete>Song was deleted ! </songDelete>
+                <noSongDelete>No song was deleted ! </noSongDelete>
+            </infoMessage>
+            <errorMessage>
+                <songError>Your filesize is to big or your file type is not allowed</songError>
+                <upload>You didn't meet the requirements!</upload>
+                <imageError>Your file size is to big or image type is not allowed!</imageError>
+
+            </errorMessage>
              <validate>
                 <title>
                     <lengthMin>3</lengthMin>

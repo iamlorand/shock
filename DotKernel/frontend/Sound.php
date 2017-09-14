@@ -67,11 +67,11 @@ class Sound extends Dot_Model
 
     }
     #returns search results filtered by a tag
-    public function getMusicListByTag($tag, $page = 1) 
+    public function getMusicListByTag($genre, $page = 1) 
     { 
         $select = $this->db->select()
                             ->from('sound')
-                            ->where("tags LIKE ?" , $tag);
+                            ->where("genre LIKE ?" , $genre);
                       
         $dotPaginator=new Dot_Paginator($select, $page, $this->settings->resultsPerPage);
     

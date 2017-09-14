@@ -9,12 +9,19 @@ class Sound_View extends View
         $this->session = Zend_Registry::get('session');
     }
     #use this function to upload a file
-    public function upload($template = '')
+    public function upload($template = '',$genreList)
     {
         if ($template != '')
         {
             $this->template = $template;
             $this->tpl->setFile('tpl_main', 'sound/' . $this->template . '.tpl');
+            $this->tpl->setBlock('tpl_main','genre_list','genre_list_block');
+            foreach ($genreList as $genre) {
+                foreach ($genre as $key => $value) {
+                    $this->tpl->setVar(strtoupper($key),$value); 
+                }
+                $this->tpl->parse('genre_list_block','genre_list',true);
+            }
         }  
     }
     #use this function to create a new playlist
@@ -125,11 +132,20 @@ class Sound_View extends View
     
     //top 50 order by viewCount
     public function top50($template='', $list, $playlistList = ''){
-        if ($template != '') $this->template=$template;
+               if ($template != '') $this->template=$template;
         $this->tpl->setFile('tpl_main','sound/'.$this->template.'.tpl');
         $this->tpl->setBlock('tpl_main','list_music','list_music_block');
         $this->tpl->setBlock('list_music','playlist','playlist_block');
-        foreach ($list as $list => $music) {
+        $this->tpl->setBlock('list_music','action_button_logged','action_button_logged_block');
+       
+     foreach ($list as $listTop => $music) {
+            //parsing the buttons on the replys for the logged users 
+            if (isset($this->session->user->id)) {
+                $this->tpl->parse('action_button_logged_block', '');
+                if ($music['userId'] == $this->session->user->id) {
+                   $this->tpl->parse('action_button_logged_block', 'action_button_logged', TRUE); 
+                }
+            }
             foreach ($music as $key => $value) {
                 if ($key == 'thumbnail' && $value == '') {
                     $this->tpl->setVar(strtoupper($key), '{SITE_URL}images/frontend/vinyl_default.jpg');
@@ -147,8 +163,7 @@ class Sound_View extends View
                 }
             }
             $this->tpl->parse('list_music_block','list_music',true);
-        } 
-
+        }
     }
 
 
