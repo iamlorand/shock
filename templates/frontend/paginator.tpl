@@ -1,5 +1,5 @@
 <div class="light">
-<div class="paginate wrapper">
+<div class="paginate1 wrapper">
 	
 	 
 	<ul class="paginate pag2 clearfix"> 

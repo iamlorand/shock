@@ -19,7 +19,19 @@ switch ($registry->requestAction)
 
             if (file_exists($_FILES['thumbnail']['tmp_name']))
             {
+
+                $a="./images/".$file_name;
+                list($width, $height) = getimagesize($a);
+                $newwidth = "300"; 
+                $newheight = "200";
+                $thumb = imagecreatetruecolor($newwidth, $newheight);
+                $source = imagecreatefromjpeg($a);
+                imagecopyresized($dest, $source, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+                imagejpeg($dest, $a, 100);
+
+
                 foreach ($_FILES['thumbnail'] as $type => $dataValue) {
+
                     $validatedFile = validateImg($type, $dataValue);
                     if($validatedFile !== true)
                     {
@@ -79,8 +91,8 @@ switch ($registry->requestAction)
             $session->message['txt'] = $option->infoMessage->update;
             $session->message['type'] = 'info';
 
-                 header('Location:'.$registry->configuration->website->params->url .'/' . $registry->requestController);
-                  exit;
+                header('Location:'.$registry->configuration->website->params->url .'/' . $registry->requestController);
+                exit;
             }
         }
         break;
@@ -412,9 +424,11 @@ switch ($registry->requestAction)
 function validateImg($type, $data)
 {
     $errors = [];
+
+
     if($type == 'size')
     {
-        $allowedSize = 2097152;
+    $allowedSize = 2097152;
         if($data > $allowedSize)
         {
             $errors[] = "Your image size " . $data . " is too big!";
@@ -422,12 +436,15 @@ function validateImg($type, $data)
     }
     if($type == 'type')
     {
-        $allowedType = ["image/jpeg" => "image/jpeg"];
+        $allowedType = ["image/jpeg" => "image/jpeg","image/jpg" => "image/jpg"];
         if(!array_key_exists($data, $allowedType))
         {
             $errors[] = "Your image type " . $data . " is not allowed!";
         }
     }
+
+
+
     if(count($errors) === 0)
     {
         return true;
