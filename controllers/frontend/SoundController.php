@@ -13,101 +13,150 @@ switch ($registry->requestAction)
 {
     default:
     case 'upload':
-        $upload = $soundView->upload('upload');
-        if ($_SERVER['REQUEST_METHOD'] == 'POST')
-        { 
-
+    $genreList = $soundModel->getGenreList();
+    $upload = $soundView->upload('upload', $genreList);
+    if ($_SERVER['REQUEST_METHOD'] == 'POST')
+    {   
+        if(isset($session->user->id))
+        {
+            $thumbnailFileError['empty'] = true;
+            $songFileError['empty'] = true;
             if (file_exists($_FILES['thumbnail']['tmp_name']))
             {
+            // define('TEMPLATES_PATH', APPLICATION_PATH . '/templates');
+            // $_FILES['thumbnail']['tmp_name']; // file on server
+            // $_FILES['thumbnail']['name']; // original file name
 
-                $a="./images/".$file_name;
-                list($width, $height) = getimagesize($a);
-                $newwidth = "300"; 
-                $newheight = "200";
-                $thumb = imagecreatetruecolor($newwidth, $newheight);
-                $source = imagecreatefromjpeg($a);
-                imagecopyresized($dest, $source, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-                imagejpeg($dest, $a, 100);
-
+                $pathToTheFile = $_FILES['thumbnail']['tmp_name'];
+                $newImageName = md5(microtime(true));
+                $thumbnail_type = $_FILES['thumbnail']['type'];
+                $imageValidation = new Dot_Image($pathToTheFile, $newImageName, $thumbnail_type);
 
                 foreach ($_FILES['thumbnail'] as $type => $dataValue) {
-
-                    $validatedFile = validateImg($type, $dataValue);
-                    if($validatedFile !== true)
+                    #$width = [200, 400, 600, 1000];
+                    $width = [200];
+                    $imageValidation->checkImageExtension();
+                    $imageValidation->checkImageWidth();
+                    $validatedFile = $imageValidation -> generateScaledImages($width);
+                    if ($validatedFile !== true) {
+                        $thumbnailFileError['error'][$type] = $validatedFile;
+                    }
+                      else
                     {
-                        $countError[$type] = $validatedFile;
+                        $thumbnailFileError['success']= 'success';
+                        $thumbnailFileError['empty'] = false;
                     }
                 }
-            }if (file_exists($_FILES['fileToUpload']['tmp_name']))
+            }
+            if (file_exists($_FILES['fileToUpload']['tmp_name']))
             {
                 foreach ($_FILES['fileToUpload'] as $type => $dataValue) {
-                    $validatedFile = validateSong($type, $dataValue);
-                    if($validatedFile !== true)
-                    {
-                        $countError1[$type] = $validatedFile;
+                    // $songFile = true;
+                    $mimeFile = mime_content_type($_FILES['fileToUpload']['tmp_name']);
+                    $sizeFile = filesize($_FILES['fileToUpload']['tmp_name']);
+                    $validatedFile = validateSong($type, $sizeFile ,$mimeFile);
+                    if ($validatedFile !== true) {
+                        $songFileError['error'][$type] = $validatedFile;
                     }
-                }
+                    else
+                    {
+                        $songFileError['success']= 'success';
+                        $songFileError['empty'] = false;
+                    }
+
+                }           
             }
 
             //POST values that will be validated
             $values = [
-                'title'=> [
-                    'title' => str_replace(" ", "", strip_tags($_POST['title'])) ?? '',
-                ],
-                'description'=> [
-                    'description'=> str_replace(" ", "", strip_tags($_POST['description'])) ?? '',
-                ],
-                'tags'=> [
-                    'tags'=> str_replace(" ", "", strip_tags($_POST['tags'])) ?? ''
-                ]
+            'title'=> [
+            'title' => str_replace(" ", "", strip_tags($_POST['title'])) ?? '',
+            ],
+            'description'=> [
+            'description'=> str_replace(" ", "", strip_tags($_POST['description'])) ?? '',
+            ],
+            'genre'=> [
+            'genre'=> str_replace(" ", "", strip_tags($_POST['genre'])) ?? ''
+            ]
             ];
 
 
             $dotValidateSong = new Dot_Validate_Sound(array('who' => 'user', 'action' => 'add', 'values' => $values));
 
-            if($dotValidateSong->isValid() && empty($countError)  && empty($countError1))
+            if($dotValidateSong->isValid() && !array_key_exists('error', $thumbnailFileError)  && !array_key_exists('error',$songFileError) && $thumbnailFileError['empty'] == false && $songFileError['empty'] == false)
             {
                 $data =  $dotValidateSong->getData();
                 $data = $_POST;
-                
                 $data['userId'] = $registry->session->user->id;
-                //$data['filename'] = $_FILES["fileToUpload"];
+                $thumbnail_dir = "uploads/thumbnails/";
+                $thumbnail_file = $thumbnail_dir . basename($_FILES["thumbnail"]["name"]);
+                $music_dir = "uploads/music/";
+                $music_file = $music_dir . basename($_FILES["fileToUpload"]["name"]);
+                move_uploaded_file($_FILES["thumbnail"]["tmp_name"], $thumbnail_file);
+                move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $music_file);
+                $data['thumbnail'] = $thumbnail_file;
+                $data['filename'] = $music_file;
                 
-                
-            $thumbnail_dir = "uploads/thumbnails/";
-            $thumbnail_file = $thumbnail_dir . basename($_FILES["thumbnail"]["name"]);
-            $music_dir = "uploads/music/";
-            $music_file = $music_dir . basename($_FILES["fileToUpload"]["name"]);
-            move_uploaded_file($_FILES["thumbnail"]["tmp_name"], $thumbnail_file);
-            move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $music_file);
-            $data['thumbnail'] = $thumbnail_file;
-            $data['filename'] = $music_file;
-            // echo "<pre>";
-            // var_dump($data);exit;
-            
-
-            $soundModel->insertUpload($data);
-            
-            $session->message['txt'] = $option->infoMessage->update;
-            $session->message['type'] = 'info';
+                $soundModel->insertUpload($data);
+                $registry->session->message['txt'] = $option->infoMessage->songAdd;
+                $registry->session->message['type'] = 'info';
 
                 header('Location:'.$registry->configuration->website->params->url .'/' . $registry->requestController);
                 exit;
             }
+            else{
+                $error = $dotValidateSong->getError();
+
+                if($thumbnailFileError['empty'] == true)
+                {
+                    $error['thumbnail'] = "You haven't selected a thumbnail !";
+                }
+                else
+                {
+                    if(array_key_exists('error', $thumbnailFileError))
+                    {
+                        $error['thumbnail'] = $option->errorMessage->imageError;
+                    } 
+                }
+                if($songFileError['empty'] == true)
+                {
+                    $error['song'] = " You haven't selected a song!";
+                }
+                else
+                {
+                    if(array_key_exists('error', $songFileError))
+                    {
+                        $error['song'] = $option->errorMessage->songError;
+                    }
+                }
+    
+                $registry->session->message['txt'] = $error;
+                $registry->session->message['type'] = 'error';  
+                header('Location:'.$registry->configuration->website->params->url .'/' . $registry->requestController .'/upload');
+                exit;
+            } 
         }
-        break;
+            $_SESSION['redirectURL'] = 'http://' . $_SERVER["SERVER_NAME"] . $_SERVER['REQUEST_URI'];
+            header('Location:' . $registry->configuration->website->params->url . '/user/login?returnurl=' . $_SESSION['redirectURL']);
+            exit;
+        
+    }
 
+    break;
 
-     case 'list':
+    case 'list':
         $page=(isset($registry->request['page']) && $registry->request['page'] > 0 ) ? $registry->request['page'] : 1;
         $list = $soundModel->getMusicList($page);
         $genreList = $soundModel->getGenreList();
-        $soundView->displayGenres('show_list', $genreList);
 
-        if($_SERVER['REQUEST_METHOD'] == 'POST') 
+        if($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['search'])) 
         {
-            $session->searchedFor = $_POST['search'];
-        }
+            $session->searchedFor = $_GET['search'];
+            if(isset($session->searchedFor) && !empty($session->searchedFor))
+            {
+                $list=$soundModel->getMusicListBySearchWord($session->searchedFor, $page);
+            }            
+        } 
         if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['genre'])) {
             $queryTag = strtolower(strip_tags($_GET['genre']));
             if ($_GET['genre'] != 'all') {
@@ -118,10 +167,6 @@ switch ($registry->requestAction)
             }
             
         } else {
-            if(isset($session->searchedFor) && !empty($session->searchedFor))
-            {
-                $list=$soundModel->getMusicListBySearchWord($session->searchedFor, $page);
-            }
             if(isset($session->user->id)) {
                 $userId = $session->user->id;
                 $playlistList = $soundModel->playlistlist($userId);
@@ -131,6 +176,7 @@ switch ($registry->requestAction)
             }
         }
 
+        $soundView->displayGenres('show_list', $genreList);
         
 
         break;
@@ -182,6 +228,7 @@ switch ($registry->requestAction)
             $comments = $soundModel->getReplysAndCommentsById($id);
             $soundView->showSongById('show_songdescription', $song, $comments, $checkRating, $ratingCount);
         }
+
 
 
 
@@ -421,65 +468,32 @@ switch ($registry->requestAction)
     //     break;
 }
 
-function validateImg($type, $data)
+
+function validateSong($type, $sizeFile,  $mimeFile)
 {
-    $errors = [];
-
-
+    $errors= [];
     if($type == 'size')
     {
-    $allowedSize = 2097152;
-        if($data > $allowedSize)
-        {
-            $errors[] = "Your image size " . $data . " is too big!";
+        $allowedSize = 10485760;
+        if($sizeFile > $allowedSize) {
+            $errors[] = "Your filesize ".$type." is to big !";
         }
     }
     if($type == 'type')
     {
-        $allowedType = ["image/jpeg" => "image/jpeg","image/jpg" => "image/jpg"];
-        if(!array_key_exists($data, $allowedType))
+        $allowedType = ["audio/mpeg" => "audio/mpeg"];
+
+        if(!array_key_exists($mimeFile, $allowedType))
         {
-            $errors[] = "Your image type " . $data . " is not allowed!";
-        }
+             $errors[] = "Your file type ".$type."is not allowed!";
+        }       
     }
-
-
-
-    if(count($errors) === 0)
+    if(count($errors) == 0)
     {
         return true;
-    }
-    else
-    {
+    } else {
         return $errors;
     }
-}
-
-function validateSong($type, $data)
-{
-    $errors = [];
-    if($type == 'size')
-    {  $mb=1048576;
-        $allowedSize = 15*$mb;
-        if($data > $allowedSize)
-        {
-            $errors[] = "Your file size " . $data . " is too big!";
-        }
-    }
-    if($type == 'type')
-    {
-        $allowedType = ["audio/mp3" => "audio/mp3"];
-        if(!array_key_exists($data, $allowedType))
-        {
-            $errors[] = "Your file  type " . $data . " is not allowed!";
-        }
-    }
-    if(count($errors) === 0)
-    {
-        return true;
-    }
-    else
-    {
-        return $errors;
-    }
+        
+    
 }
