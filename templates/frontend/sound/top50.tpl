@@ -1,17 +1,24 @@
 <script>
 var SITE_URL = "{SITE_URL}";
 </script>
+<style type="text/css">
+    li.playlistElement {
+        list-style-type: none;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="{TEMPLATES_URL}/css/frontend/style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<!-- checks if a song was played for at least 35% -->
-<script type="text/javascript" src="{SITE_URL}/templates/js/frontend/audioplayer.js"></script>
+    <form  class="form-wrapper" action="" method="GET" style="float: left;">
+        <input type="search" id="search" name="search" placeholder=" Search here ... " results="5"/>
+        <input type="submit" id="submit" value="Submit" />
+        <label>  or </label>
+        <a href="{SITE_URL}/sound/upload">  <input type="button" id="uploadyour" name="img" value="Upload your own" /> </a>
+    </form> <br>
     
-    
-
 <div id="userList" class="box-shadow">
     <table class="table table-striped">
         <thead>
             <tr>
-                <th style="text-align: center; width: 20px;">#</th>
                 <th>Thumbnail</th>
                 <th>Song title</th>
                 <th>Share</th>
@@ -23,7 +30,7 @@ var SITE_URL = "{SITE_URL}";
         <tbody>
         <!-- BEGIN list_music -->
             <tr>
-                <td style="text-align: center;">{ID}</td>
+                
                 <td style="width: 50px;"><img src="{SITE_URL}/{THUMBNAIL}" style="width: 100px; height: auto;"></td>
                 <td><a href="{SITE_URL}/sound/show_song/id/{ID}">{TITLE}</a></td>
                 <td>
@@ -53,10 +60,12 @@ var SITE_URL = "{SITE_URL}";
                         <source src="{SITE_URL}/{FILENAME}" type="audio/mpeg">
                       </audio>
                       <div id="audio_controls_bar">
-                        <button id="playpausebtn{ID}"   btnSongId="{ID}">Play</button>
+                        <button id="playpausebtn{ID}"   btnSongId="{ID}">
+                            <i btnSongId="{ID}" class="fa fa-play"></i>
+                        </button>
                         <input id="seekslider{ID}"      btnSongId="{ID}" type="range" min="0" max="100" value="0" step="1">
                         <span id="curtimetext{ID}"      btnSongId="{ID}" >00:00</span> / <span id="durtimetext{ID}" btnSongId="{ID}">00:00</span>
-                        <button id="mutebtn{ID}"        btnSongId="{ID}">Mute</button>
+                        <button id="mutebtn{ID}"        btnSongId="{ID}"><i btnSongId="{SONG_ID}" class="fa fa-volume-up" aria-hidden="true"></i></button>
                         <input id="volumeslider{ID}"    btnSongId="{ID}" type="range" min="0" max="100" value="100" step="1">
                       </div>
                     </div>
@@ -65,11 +74,13 @@ var SITE_URL = "{SITE_URL}";
                 <td>
                     <table  class="action_table">
                         <tr>
+                            <!-- BEGIN action_button_logged -->
                             <td>
-                                <button>
-                                    <a href="{SITE_URL}/sound/update/id/{ID}" class="glyphicon glyphicon-pencil" title="Edit/Update"></a>
-                                </button>
+                                <a href="{SITE_URL}/sound/update/id/{ID}" title="Edit/Update">
+                                    <button class="glyphicon glyphicon-pencil"></button>
+                                </a>
                             </td>
+                            <!-- END action_button_logged -->
                             <td>
                                 <button id="{ID}" class="glyphicon glyphicon-pushpin" title="Add to playlist" onclick="addToPlaylist(this)">
                                 </button>
@@ -88,6 +99,8 @@ var SITE_URL = "{SITE_URL}";
     </table>
 </div>
 
+
+
 <script type="text/javascript">
     var siteurl = "{SITE_URL}";
 
@@ -103,7 +116,7 @@ var SITE_URL = "{SITE_URL}";
                 data : {playlistId: playlistId, soundId: soundId},
                 success : function(response){
                     if(response['success'] == true){
-                        $('li[songId='+soundId+']').parent().hide();
+                        $('li[songId='+soundId+']').hide();
                     } else {
                         alert(response['message']);
                     }

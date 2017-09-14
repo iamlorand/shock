@@ -1,11 +1,6 @@
 <!-- include jQuery library -->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
-
-
-<!-- include JustWave Player css and js files -->
-<link type="text/css" rel="stylesheet" href="{SITE_URL}/justwave/justwave.player.css">
-<script src="{SITE_URL}/justwave/justwave.player-min.js"></script>
-
+<script src="https://use.fontawesome.com/34468cc8b0.js"></script>
 <style type="text/css">
     textarea{ width: 100%; padding: 5px; margin: 2px; }
     .songDescription{ margin: auto; }
@@ -17,8 +12,27 @@
     div#audio_controls_bar button{ color: #481D24; }
     input#seekslider{ width:180px; float: left; }
     input#volumeslider{ width: 80px; float: right; }
+
+
+
+
+.form {
+  background: #fff;
+  padding: 4em 4em 2em;
+  max-width: 600px;
+  margin: 50px auto 0;
+  box-shadow: 0 0 1em #222;
+  border-radius: 2px;}
+    h2 {
+    margin:0 0 50px 0;
+    padding:10px;
+    text-align:center;
+    font-size:30px;
+    color: #FF630C;*/
+    color:darken(#e5e5e5, 50%);
+    border-bottom:solid 1px #e5e5e5;
+  }
 </style>
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
 <script>
 var SITE_URL = "{SITE_URL}";
 </script>
@@ -29,19 +43,12 @@ $(document).ready(function(){
         $(this).prevAll('.content').contents().unwrap().wrap('<form method="POST" action=""><textarea name="text"/><button name="id" value="'+editid+'" type="submit">Save</button></form>');
         $(this).hide();
     });
-
-    // $.justwave({ showname: 0, buttoncolor: '#337AB7'});
 });
 
       
 
 </script>
-<link rel="stylesheet" type="text/css" href="{SITE_URL}/templates/js/frontend/audioplayer.js">
-<!-- <script type="text/javascript">
-    $(document).ready( function() {
-      $.justwave({ showname: 0, buttoncolor: '#337AB7', ajax:'{SITE_URL}/sound/justwave'});
-    });
-</script> -->
+
 <script type="text/javascript">
     var siteurl = "{SITE_URL}";
 
@@ -80,24 +87,22 @@ function reply(id)
      
 
 
-<div class="panel panel-success" style="width: 45%; float: left;">
-    <div class="panel-heading">
-        <h3 style="text-align: center;">SONG DESCRIPTION</h3>
+<div  class="form" style="width: 45%; float: left;">
+    <div  class="panel-heading">
+        <h2 style="text-align: center;">SONG DESCRIPTION</h2>
         
     </div>
     <div id="audio_player_box">
       <audio id="song{SONG_ID}" songId="{SONG_ID}" btnSongId="{SONG_ID}" width="550" height="300">
         <source src="{SITE_URL}/{SONG_FILENAME}" type="audio/mpeg">
       </audio>
-
-        <!-- <audio  data-wave_color="#3232C8" data-prog_color="#3232C8" data-back_color="#C0C0C0" width="700" height="90" data-showtimes="0" data-showname="0" data-buttoncolor="#337AB7">
-            <source src="{SITE_URL}/{SONG_FILENAME}" type="audio/mpeg">
-        </audio> -->
       <div id="audio_controls_bar">
-        <button id="playpausebtn{SONG_ID}"   btnSongId="{SONG_ID}">Play</button>
+        <button id="playpausebtn{SONG_ID}"   btnSongId="{SONG_ID}">
+            <i btnSongId="{SONG_ID}" class="fa fa-play"></i>
+        </button>
         <input id="seekslider{SONG_ID}"      btnSongId="{SONG_ID}" type="range" min="0" max="100" value="0" step="1">
-        <span id="curtimetext{SONG_ID}"      btnSongId="{SONG_ID}" >00:00</span> / <span id="durtimetext{SONG_ID}" btnSongId="{SONG_ID}">00:00</span>
-        <button id="mutebtn{SONG_ID}"        btnSongId="{SONG_ID}">Mute</button>
+        <span id="curtimetext{SONG_ID}"      btnSongId="{SONG_ID}" >00:00</span> / <span id="durtimetext{SONG_ID}" btnSongId="SONG_ID}">00:00</span>
+        <button id="mutebtn{SONG_ID}"        btnSongId="{SONG_ID}"><i btnSongId="{SONG_ID}" class="fa fa-volume-up" aria-hidden="true"></i></button>
         <input id="volumeslider{SONG_ID}"    btnSongId="{SONG_ID}" type="range" min="0" max="100" value="100" step="1">
       </div>
     </div>
@@ -116,19 +121,19 @@ function reply(id)
                     <td colspan="2"><img src="{SITE_URL}/{SONG_THUMBNAIL}" style="width: 200px; height: auto;"></td>
                 </tr>
                  <tr>
-                    <td>Posted by :</td>
+                    <td style="color:#FF630C;"><b>Posted by :</b></td>
                     <td>{SONG_USERNAME}</td>
                 </tr>
                 <tr>
-                    <td>TITLE</td>
+                    <td style="color:#FF630C;"><b>Title</b></td>
                     <td>{SONG_TITLE}</td>
                 </tr>
                 <tr>
-                    <td>DESCRIPTION</td>
+                    <td style="color:#FF630C;"><b>Description</b></td>
                     <td>{SONG_DESCRIPTION}</td>
                 </tr>
                 <tr>
-                    <td>TAGS</td>
+                    <td style="color:#FF630C;"><b>Tags</b></td>
                     <td>{SONG_TAGS}</td>
                 </tr>
             </tbody>
@@ -189,4 +194,4 @@ function reply(id)
     </form>
 
 </div>
-
+<script type="text/javascript" src="{SITE_URL}/templates/js/frontend/audioplayer.js"></script>

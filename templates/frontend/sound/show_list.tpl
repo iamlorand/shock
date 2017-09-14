@@ -6,15 +6,18 @@ var SITE_URL = "{SITE_URL}";
         list-style-type: none;
     }
 </style>
+<link rel="stylesheet" type="text/css" href="{TEMPLATES_URL}/css/frontend/style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <form  class="form-wrapper" action="" method="GET" style="float: left;">
+        <input type="search" id="search" name="search" placeholder=" Search here ... " results="5"/>
+        <input type="submit" id="submit" value="Submit" />
+        <label>  or </label>
+        <a href="{SITE_URL}/sound/upload">  <input type="button" id="uploadyour" name="img" value="Upload your own" /> </a>
+    </form> <br>
+    
+
 <!-- checks if a song was played for at least 35% -->
 <script type="text/javascript" src="{SITE_URL}/templates/js/frontend/audioplayer.js"></script>
-    
-    <form action="" method="POST" style="float: left;">
-        <label for="search-field">Search:</label> 
-        <input type="search" name="search" placeholder=" Search here ... " results="5" />
-        <input type="submit" value="Submit" />
-    </form> <br>
     <form action="" method="GET" style="float: right;">
         <select name="genre" onchange="this.form.submit()">
             <option value="">Select a genre</option>
@@ -29,7 +32,6 @@ var SITE_URL = "{SITE_URL}";
     <table class="table table-striped">
         <thead>
             <tr>
-                <th style="text-align: center; width: 20px;">#</th>
                 <th>Thumbnail</th>
                 <th>Song title</th>
                 <th>Share</th>
@@ -41,7 +43,7 @@ var SITE_URL = "{SITE_URL}";
         <tbody>
         <!-- BEGIN list_music -->
             <tr>
-                <td style="text-align: center;">{ID}</td>
+                
                 <td style="width: 50px;"><img src="{SITE_URL}/{THUMBNAIL}" style="width: 100px; height: auto;"></td>
                 <td><a href="{SITE_URL}/sound/show_song/id/{ID}">{TITLE}</a></td>
                 <td>
@@ -71,10 +73,12 @@ var SITE_URL = "{SITE_URL}";
                         <source src="{SITE_URL}/{FILENAME}" type="audio/mpeg">
                       </audio>
                       <div id="audio_controls_bar">
-                        <button id="playpausebtn{ID}"   btnSongId="{ID}">Play</button>
+                        <button id="playpausebtn{ID}"   btnSongId="{ID}">
+                            <i btnSongId="{ID}" class="fa fa-play"></i>
+                        </button>
                         <input id="seekslider{ID}"      btnSongId="{ID}" type="range" min="0" max="100" value="0" step="1">
                         <span id="curtimetext{ID}"      btnSongId="{ID}" >00:00</span> / <span id="durtimetext{ID}" btnSongId="{ID}">00:00</span>
-                        <button id="mutebtn{ID}"        btnSongId="{ID}">Mute</button>
+                        <button id="mutebtn{ID}"        btnSongId="{ID}"><i btnSongId="{SONG_ID}" class="fa fa-volume-up" aria-hidden="true"></i></button>
                         <input id="volumeslider{ID}"    btnSongId="{ID}" type="range" min="0" max="100" value="100" step="1">
                       </div>
                     </div>

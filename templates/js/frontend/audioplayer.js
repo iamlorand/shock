@@ -10,6 +10,8 @@ var volumeslider = [];
 
 var siteurl = SITE_URL;
 
+var previousSong;
+
 function assignPlayerEvents(id) {
 
     song[id] = document.getElementById("song"+id);
@@ -31,8 +33,8 @@ function assignPlayerEvents(id) {
 //stops and sends the listened time to analize
 window.onbeforeunload = function() {
     $(document).ready(function(){
-            var status = ($(playbtn).text());
-            if(status == "Pause"){
+            var status = ($(playbtn).children().attr('class'));
+            if(status == "fa fa-pause"){
                 playbtn.click();
             }
     });
@@ -52,22 +54,51 @@ $(document).ready(function(){
 
 //plays or pauses the song
 function playPause(e){
+    
     songId = $(e.target).attr('btnSongId');
     if (isNaN(songId)) {
-        alert("!")
+        alert("!");
         return;
     }
 
     var song = document.getElementById("song"+songId);
     playbtn = document.getElementById("playpausebtn"+songId);
-
     if(song.paused){
+        if(typeof previousSong !== "undefined")
+        {
+            previousSong.pause();
+            $(previousPlayBtn).children().attr("class","fa fa-play");
+            totalTime += previousSong.currentTime - startTime;
+            listened = (totalTime / previousSong.duration) * 100;
+            if((listened > 5) && (viewed == false)) {
+                viewed = true;
+                var requestSettings = {
+                            'data' : {'viewed': viewed, 'soundId': previousSongId},
+                            'method' : 'POST'
+                        };
+                $.ajax(siteurl+"/sound/viewed", requestSettings).done(function(response){
+                    var receivedData = $.parseJSON(response);
+                    var voteSuccess = receivedData['success']
+                    var voteValue = receivedData['data']['voteValue'];
+                    if (voteSuccess == true) {
+                        $('#voteValue').text(voteValue);
+                    }
+                });
+                viewed = false;
+            }
+        }
         song.play();
-        playbtn.innerHTML = "Pause";
+        previousSong = document.getElementById("song"+songId);
+        previousPlayBtn = document.getElementById("playpausebtn"+songId);
+        previousSongId = songId;
+
+        // playbtn.innerHTML = "Pause";
+        $(this).children().attr("class","fa fa-pause");
         startTime = song.currentTime;
     } else {
         song.pause();
-        playbtn.innerHTML = "Play";
+        // playbtn.innerHTML = "Play";
+        $(this).children().attr("class","fa fa-play");
         totalTime += song.currentTime - startTime;
         listened = (totalTime / song.duration) * 100;
         if((listened > 5) && (viewed == false)) {
@@ -137,10 +168,13 @@ function songMute(e){
 
     if(song.muted){
         song.muted = false;
-        mutebtn.innerHTML = "Mute";
+        // mutebtn.innerHTML = "Mute";
+        $(this).children().attr("class","fa fa-volume-up");
     } else {
         song.muted = true;
-        mutebtn.innerHTML = "Unmute";
+        // mutebtn.innerHTML = "Unmute";
+        $(this).children().attr("class","fa fa-volume-off");
+
     }
 }
 
