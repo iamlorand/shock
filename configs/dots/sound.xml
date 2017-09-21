@@ -23,7 +23,10 @@
                 <action>
                     <upload>Upload</upload>
                     <list>List all songs</list>
-                    <show>Show song details</show>
+                    <show_song>Show song</show_song>
+                    <top50>Top 50</top50>
+                    <allplaylist>Playlists</allplaylist>
+                    <myplaylist>My playlist</myplaylist>
                 </action>
             </pageTitle>
              <infoMessage>

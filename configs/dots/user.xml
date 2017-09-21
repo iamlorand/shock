@@ -74,7 +74,7 @@ If you didn't make this request, you can ignore this email.</message>
 				<emailNotFound> was not found in our records !</emailNotFound>
 				<invalidUsername>Invalid Username !</invalidUsername>
 				<invalidPassword>Invalid Password !</invalidPassword>
-				<userExists> already exists! </userExists>
+				<imageError>Your file size is to big or image type is not allowed!</imageError>
 				<wrongResetPasswordUrl> The Reset Password link you followed is expired. </wrongResetPasswordUrl>
 			</errorMessage>
 			<infoMessage>

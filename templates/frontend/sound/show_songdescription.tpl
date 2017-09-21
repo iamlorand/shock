@@ -1,20 +1,25 @@
 <!-- include jQuery library -->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
 <script src="https://use.fontawesome.com/34468cc8b0.js"></script>
+
 <style type="text/css">
     textarea{ width: 100%; padding: 5px; margin: 2px; }
     .songDescription{ margin: auto; }
     .songDescription td{ padding: 10px; }
-    div#audio_player_box{ width:auto; margin:0px auto; text-align: center; }
-    div#audio_controls_bar{ background: #333; padding:10px; color:#CCC;}
+    div#audio_player_box{ margin:0px auto; text-align: center; }
+    div#audio_controls_bar{ background: #333; padding:10px; color:#CCC; }
     #playpausebtn {float: left; margin-right: 10px;}
     #mutebtn {float: right; margin-left: 10px;}
     div#audio_controls_bar button{ color: #481D24; }
-    input#seekslider{ width:180px; float: left; }
-    input#volumeslider{ width: 80px; float: right; }
+    input#seekslider{ float: left; }
+    input#volumeslider{ float: right; }
+    /* start audio playe*/
+    input[type=range] {
+        display: inline;
+        width: auto;
+    }
 
-
-
+/*end audio playet*/
 
 .form {
   background: #fff;
@@ -104,6 +109,7 @@ function reply(id)
         <span id="curtimetext{SONG_ID}"      btnSongId="{SONG_ID}" >00:00</span> / <span id="durtimetext{SONG_ID}" btnSongId="SONG_ID}">00:00</span>
         <button id="mutebtn{SONG_ID}"        btnSongId="{SONG_ID}"><i btnSongId="{SONG_ID}" class="fa fa-volume-up" aria-hidden="true"></i></button>
         <input id="volumeslider{SONG_ID}"    btnSongId="{SONG_ID}" type="range" min="0" max="100" value="100" step="1">
+        <button id="stopbtn{SONG_ID}"        btnSongId="{SONG_ID}"><i btnSongId="{SONG_ID}" class="fa fa-stop" aria-hidden="true"></i></button>
       </div>
     </div>
     <div class="panel-body">
@@ -133,8 +139,8 @@ function reply(id)
                     <td>{SONG_DESCRIPTION}</td>
                 </tr>
                 <tr>
-                    <td style="color:#FF630C;"><b>Tags</b></td>
-                    <td>{SONG_TAGS}</td>
+                    <td style="color:#FF630C;"><b>Genre</b></td>
+                    <td>{SONG_GENRE}</td>
                 </tr>
             </tbody>
         </table>      
@@ -195,3 +201,8 @@ function reply(id)
 
 </div>
 <script type="text/javascript" src="{SITE_URL}/templates/js/frontend/audioplayer.js"></script>
+
+
+
+
+

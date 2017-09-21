@@ -98,6 +98,32 @@ switch ($registry->requestAction)
 				header('Location: '.$registry->configuration->website->params->url. '/' . $registry->requestController. '/login');
 				exit;
 			}
+			
+            if (file_exists($_FILES['avatar']['tmp_name']))
+            {
+            // define('TEMPLATES_PATH', APPLICATION_PATH . '/templates');
+            // $_FILES['thumbnail']['tmp_name']; // file on server
+            // $_FILES['thumbnail']['name']; // original file name
+
+            $pathToTheFile = $_FILES['avatar']['tmp_name'];
+            $newImageName = md5(microtime(true));
+            $thumbnail_type = $_FILES['avatar']['type'];
+            $imageValidation = new Dot_Image($pathToTheFile, $newImageName, $thumbnail_type);
+            foreach ($_FILES['avatar'] as $type => $dataValue) {
+                #$width = [200, 400, 600, 1000];
+                $width = [200];
+                $imageValidation->checkImageExtension();
+                $imageValidation->checkImageWidth();
+                $validatedFile = $imageValidation -> generateScaledImages($width);
+                if ($validatedFile !== true) {
+                    $thumbnailFileError['error'][$type] = $validatedFile; 
+                    
+                } else {
+                    $thumbnailFileError['success']= 'success';
+                    
+            	}
+                }
+            }
 			// POST values that will be validated
 			$values = array('details' => 
 							array(
@@ -121,27 +147,34 @@ switch ($registry->requestAction)
 										'values' => $values,
 										'userId' => $registry->session->user->id
 									));
-			if($dotValidateUser->isValid())
-			{
+			if($dotValidateUser->isValid() && !array_key_exists('error', $thumbnailFileError))
+			{ 
 				// no error - then update user
 				$data = $dotValidateUser->getData();
 				$data['id'] = $registry->session->user->id;
 				//setting custom avatar
-
-				
-				$avatar_dir = "uploads/userAvatar/";
-				$avatar_file = $avatar_dir . basename($_FILES["avatar"]["name"]);
-				move_uploaded_file($_FILES["avatar"]["tmp_name"], $avatar_file);
-				$data['avatar'] = $avatar_file;
+					$avatar_dir = "uploads/userAvatar/";
+					$avatar_file = $avatar_dir . basename($_FILES["avatar"]["name"]);
+					move_uploaded_file($_FILES["avatar"]["tmp_name"], $avatar_file);
+					$data['avatar'] = $avatar_file;
+            	
 				$userModel->updateUser($data);
 				$session->message['txt'] = $option->infoMessage->update;
 				$session->message['type'] = 'info';
-			}
+            	}
 			else
-			{
-				$data = $dotValidateUser->getData();
-				$session->message['txt'] = $dotValidateUser->getError();
-				$session->message['type'] = 'error';
+			 {  
+			 	 $error = $dotValidateUser->getError();            
+                    if(array_key_exists('error', $thumbnailFileError))
+                    {
+                        $error['thumbnail'] = $option->errorMessage->imageError;
+                    }           
+                $registry->session->message['txt'] = $error;
+                $registry->session->message['type'] = 'error';  
+
+				// $data = $dotValidateUser->getData();
+				// $session->message['txt'] = $dotValidateUser->getError();
+				// $session->message['type'] = 'error'; 
 			}
 		}
 		$data = $userModel->getUserInfo($registry->session->user->id);
@@ -151,19 +184,36 @@ switch ($registry->requestAction)
 		// display signup form and allow user to register
 		$data = array();
 		$error = array();
-		$countError = [];
+		$thumbnailFileError['empty'] = true;
 		if ($_SERVER['REQUEST_METHOD'] === "POST")
 		{
 			if (file_exists($_FILES['profilePicture']['tmp_name']))
-			{
-				foreach ($_FILES['profilePicture'] as $type => $dataValue) {
-					$validatedFile = validateImg($type, $dataValue);
-					if($validatedFile !== true)
-					{
-						$countError[$type] = $validatedFile;
-					}
-				}
-			}
+            { 
+                $pathToTheFile = $_FILES['profilePicture']['tmp_name'];
+                $newImageName = md5(microtime(true));
+                $thumbnail_type = $_FILES['profilePicture']['type'];
+                $imageValidation = new Dot_Image($pathToTheFile, $newImageName, $thumbnail_type);
+
+                foreach ($_FILES['profilePicture'] as $type => $dataValue) {
+                    #$width = [200, 400, 600, 1000];
+                    $width = [200];
+                    $imageValidation->checkImageExtension();
+                    $imageValidation->checkImageWidth();
+                    $validatedFile = $imageValidation -> generateScaledImages($width);
+                    if ($validatedFile !== true) {
+                        $thumbnailFileError['error'][$type] = $validatedFile;
+                        $registry->session->message['txt'] = $option->errorMessage->imageError;
+                		$registry->session->message['type'] = 'error';
+
+                    }
+                      else
+                    {
+                        $thumbnailFileError['success']= 'success';
+                        $thumbnailFileError['empty'] = false;
+                    }
+                }
+            }
+            
 
 			$values = array('details' => 
 								array('firstName'=>(isset($_POST['firstName']) ? $_POST['firstName'] : ''),
@@ -174,39 +224,44 @@ switch ($registry->requestAction)
 							'password' => array('password' => (isset($_POST['password']) ? $_POST['password'] : ''),
 												'password2' =>  (isset($_POST['password2']) ? $_POST['password2'] : '')
 											   ),
-							// 'captcha' => array('recaptcha_challenge_field' => (isset($_POST['recaptcha_challenge_field']) ? $_POST['recaptcha_challenge_field'] : ''),
-							// 				   'recaptcha_response_field' => (isset($_POST['recaptcha_response_field']) ? $_POST['recaptcha_response_field'] : ''))
 						  );
 			$dotValidateUser = new Dot_Validate_User(array('who' => 'user', 'action' => 'add', 'values' => $values));
-			if($dotValidateUser->isValid() && empty($countError))
+			if($dotValidateUser->isValid())
 			{
 				// no error - then add user
 			
 				$avatar_file = '';
-				if ($_FILES["profilePicture"]["tmp_name"]) {
-					$avatar_dir = "uploads/userAvatar/";
-					$avatar_name = $_FILES['profilePicture']['name'] . '_' . $_POST['email'] . '.jpg';
-					$avatar_file = $avatar_dir . $avatar_name;
-					move_uploaded_file($_FILES["profilePicture"]["tmp_name"], $avatar_file);
-				}
+				if(!array_key_exists('error', $thumbnailFileError) && $thumbnailFileError['empty'] == false){
+				$avatar_dir = "uploads/userAvatar/";
+				$avatar_name = $_FILES['profilePicture']['name'] . '_' . $_POST['email'] . '.jpg';
+				$avatar_file = $avatar_dir . $avatar_name;
+				move_uploaded_file($_FILES["profilePicture"]["tmp_name"], $avatar_file);
+				$data['avatar'] = $avatar_file;
+				} else {
+				
 				
 				$data = $dotValidateUser->getData();
-				$data['avatar'] = $avatar_file;
 				$userModel->addUser($data);
 				$session->message['txt'] = $option->infoMessage->add;
 				$session->message['type'] = 'info';
 				//login user
 				$userModel->authorizeLogin($data);
+				}
 			}
 			else
 			{
+				$error = $dotValidateUser->getError();
+				$session->message['txt'] = $error; 
+				$session->message['type'] = 'error';
+
 				if(array_key_exists('password', $data))
 				{
 					// do not display password in the add form
 					$data = $dotValidateUser->getData();
 					unset($data['password']);
-				}
-				var_dump($countError);
+
+				}              
+                
 				header('location: '.$registry->configuration->website->params->url . '/user/register');
 				exit;
 			}
@@ -306,31 +361,4 @@ switch ($registry->requestAction)
 	break;
 }
 
-function validateImg($type, $data)
-{
-	$errors = [];
-	if($type == 'size')
-	{
-		$allowedSize = 2097152;
-		if($data > $allowedSize)
-		{
-			$errors[] = "Your image size " . $data . " is too big!";
-		}
-	}
-	if($type == 'type')
-	{
-		$allowedType = ["image/jpeg" => "image/jpeg"];
-		if(!array_key_exists($data, $allowedType))
-		{
-			$errors[] = "Your image type " . $data . " is not allowed!";
-		}
-	}
-	if(count($errors) === 0)
-	{
-		return true;
-	}
-	else
-	{
-		return $errors;
-	}
-}
+

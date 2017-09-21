@@ -65,8 +65,9 @@ var SITE_URL = "{SITE_URL}";
                         </button>
                         <input id="seekslider{ID}"      btnSongId="{ID}" type="range" min="0" max="100" value="0" step="1">
                         <span id="curtimetext{ID}"      btnSongId="{ID}" >00:00</span> / <span id="durtimetext{ID}" btnSongId="{ID}">00:00</span>
-                        <button id="mutebtn{ID}"        btnSongId="{ID}"><i btnSongId="{SONG_ID}" class="fa fa-volume-up" aria-hidden="true"></i></button>
+                        <button id="mutebtn{ID}"        btnSongId="{ID}"><i btnSongId="{ID}" class="fa fa-volume-up" aria-hidden="true"></i></button>
                         <input id="volumeslider{ID}"    btnSongId="{ID}" type="range" min="0" max="100" value="100" step="1">
+                        <button id="stopbtn{ID}"        btnSongId="{ID}"><i btnSongId="{ID}" class="fa fa-stop" aria-hidden="true"></i></button>
                       </div>
                     </div>
                 </td>
@@ -98,7 +99,7 @@ var SITE_URL = "{SITE_URL}";
         </tbody>
     </table>
 </div>
-
+<script type="text/javascript" src="{SITE_URL}/templates/js/frontend/audioplayer.js"></script>
 
 
 <script type="text/javascript">
