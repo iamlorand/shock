@@ -18,7 +18,7 @@
             </li>
             <li class="clearfix">
                 <label>Tags<span class="required">*</span></label>
-                <input type="text" name="tags" placeholder="Tags" value="{SONG_TAGS}">
+                <input type="text" name="genre" placeholder="Genre" value="{SONG_GENRE}">
             </li>
             <li class="clearfix">
                 <label>Thumbnail file</label>

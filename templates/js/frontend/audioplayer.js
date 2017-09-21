@@ -2,6 +2,7 @@ var playbtn, seekslider, curtimetext, durtimetext, mutebtn, volumeslider, listen
 
 var song = [];
 var playbtn = [];
+var stopbtn = [];
 var seekslider = [];
 var curtimetext = [];
 var durtimetext = [];
@@ -20,9 +21,11 @@ function assignPlayerEvents(id) {
     curtimetext[id] = document.getElementById("curtimetext"+id);
     durtimetext[id] = document.getElementById("durtimetext"+id);
     mutebtn[id] = document.getElementById("mutebtn"+id);
+    stopbtn[id] = document.getElementById("stopbtn"+id);
     volumeslider[id] = document.getElementById("volumeslider"+id);
 
     playbtn[id].addEventListener("click",playPause,false);
+    stopbtn[id].addEventListener("click",songStop,false);
     seekslider[id].addEventListener("change",songSeek,false);
     song[id].addEventListener("timeupdate",seektimeupdate,false);
     mutebtn[id].addEventListener("click",songMute,false);
@@ -115,10 +118,10 @@ function playPause(e){
                     $('#voteValue').text(voteValue);
                 }
             });
-            viewed = false;
         }
     }
 }
+
 
 //jumps to whereever is clicked on the songs seekslider
 function songSeek(e){
@@ -183,4 +186,37 @@ function setvolume(e){
     songId = $(e.target).attr('btnSongId');
 
     $(song[songId]).prop("volume", volumeslider[songId].value / 100);
+}
+
+//stop the song
+function songStop(e){
+    songId = $(e.target).attr('btnSongId');
+    var song = document.getElementById("song"+songId);
+    stopbtn = document.getElementById("stopbtn"+songId);
+
+    if (isNaN(songId)) {
+        alert("!");
+        return;
+    }
+
+    totalTime += song.currentTime - startTime;
+    listened = (totalTime / song.duration) * 100;
+    if((listened > 5) && (viewed == false)) {
+        viewed = true;
+        var requestSettings = {
+                    'data' : {'viewed': viewed, 'soundId': songId},
+                    'method' : 'POST'
+                };
+        $.ajax(siteurl+"/sound/viewed", requestSettings).done(function(response){
+            var receivedData = $.parseJSON(response);
+            var voteSuccess = receivedData['success']
+            var voteValue = receivedData['data']['voteValue'];
+            if (voteSuccess == true) {
+                $('#voteValue').text(voteValue);
+            }
+        });
+    }
+    song.currentTime= 0;
+    $(playbtn).children().attr("class","fa fa-play");
+    song.pause();
 }

@@ -6,7 +6,7 @@
 	<ul class="form">
 		<li class="clearfix">
 			<label style="text-align: center;" for="firstName">User avatar:</label>
-			<img src="{SITE_URL}/{AVATAR}" style="width: 200px; height: auto;">
+			<img src="{SITE_URL}/{AVATAR}">
 			<input type="file" name="avatar" style="margin-left: 140px; margin-top: 10px;">			
 		</li>
 		<li class="clearfix">

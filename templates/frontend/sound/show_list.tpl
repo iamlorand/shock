@@ -78,8 +78,9 @@ var SITE_URL = "{SITE_URL}";
                         </button>
                         <input id="seekslider{ID}"      btnSongId="{ID}" type="range" min="0" max="100" value="0" step="1">
                         <span id="curtimetext{ID}"      btnSongId="{ID}" >00:00</span> / <span id="durtimetext{ID}" btnSongId="{ID}">00:00</span>
-                        <button id="mutebtn{ID}"        btnSongId="{ID}"><i btnSongId="{SONG_ID}" class="fa fa-volume-up" aria-hidden="true"></i></button>
+                        <button id="mutebtn{ID}"        btnSongId="{ID}"><i btnSongId="{ID}" class="fa fa-volume-up" aria-hidden="true"></i></button>
                         <input id="volumeslider{ID}"    btnSongId="{ID}" type="range" min="0" max="100" value="100" step="1">
+                        <button id="stopbtn{ID}"        btnSongId="{ID}"><i btnSongId="{ID}" class="fa fa-stop" aria-hidden="true"></i></button>
                       </div>
                     </div>
                 </td>
@@ -99,7 +100,7 @@ var SITE_URL = "{SITE_URL}";
                                 </button>
                                 <ul id="playlistList">
                                     <!-- BEGIN playlist -->
-                                        <li id="{PLAYLIST_ID}" songId="{ID}" class="playlistElement" style="display: none;">{PLAYLIST_PLAYLISTNAME}</li>
+                                        <li id="{PLAYLIST_ID}" songId="{ID}" class="playlistElement" style="display: none; border: solid medium #ff471a; border-radius: 5px;">{PLAYLIST_PLAYLISTNAME}</li>
                                     <!-- END playlist -->
                                 </ul>
                             </td>

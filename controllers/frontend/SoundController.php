@@ -23,10 +23,6 @@ switch ($registry->requestAction)
             $songFileError['empty'] = true;
             if (file_exists($_FILES['thumbnail']['tmp_name']))
             {
-            // define('TEMPLATES_PATH', APPLICATION_PATH . '/templates');
-            // $_FILES['thumbnail']['tmp_name']; // file on server
-            // $_FILES['thumbnail']['name']; // original file name
-
                 $pathToTheFile = $_FILES['thumbnail']['tmp_name'];
                 $newImageName = md5(microtime(true));
                 $thumbnail_type = $_FILES['thumbnail']['type'];
@@ -40,6 +36,7 @@ switch ($registry->requestAction)
                     $validatedFile = $imageValidation -> generateScaledImages($width);
                     if ($validatedFile !== true) {
                         $thumbnailFileError['error'][$type] = $validatedFile;
+                        $thumbnailFileError['empty'] = false;
                     }
                       else
                     {
@@ -57,6 +54,7 @@ switch ($registry->requestAction)
                     $validatedFile = validateSong($type, $sizeFile ,$mimeFile);
                     if ($validatedFile !== true) {
                         $songFileError['error'][$type] = $validatedFile;
+                        $songFileError['empty'] = false;
                     }
                     else
                     {
@@ -106,7 +104,7 @@ switch ($registry->requestAction)
             }
             else{
                 $error = $dotValidateSong->getError();
-
+     
                 if($thumbnailFileError['empty'] == true)
                 {
                     $error['thumbnail'] = "You haven't selected a thumbnail !";
